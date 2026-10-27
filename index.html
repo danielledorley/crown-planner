@@ -1342,6 +1342,7 @@ const ACT = {
   'tab': el => { ui.tab = el.dataset.id; ui.styleId = null; render(); go(); },
   'open-style': el => { ui.styleId = el.dataset.id; render(); go(); },
   'back-styles': () => { ui.styleId = null; render(); go(); },
+  'style-filter': el => { ui.styleFilter = el.dataset.filter || 'All'; render(); },
   'new-style': () => openSheet(styleForm()),
   'edit-style': el => openSheet(styleForm(getStyle(el.dataset.id))),
   'del-style': el => {
