@@ -215,6 +215,23 @@ textarea{resize:vertical;min-height:70px}
 .task.done .ttitle{text-decoration:line-through;color:var(--ink-soft);text-decoration-color:var(--gold)}
 .day-head{font-weight:700;font-size:13px;color:var(--sea5);letter-spacing:.06em;margin:14px 0 2px;text-transform:uppercase}
 
+/* Sasha stylist */
+.sasha-hero{display:grid;grid-template-columns:78px 1fr;gap:14px;align-items:center;padding:16px;background:linear-gradient(125deg,rgba(255,255,255,.82),rgba(201,236,227,.72),rgba(247,231,166,.48))}
+.sasha-avatar{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#8e523c 0%,#5a2d22 56%,#2d1918 100%);border:3px solid #e5c45e;box-shadow:0 0 0 4px rgba(255,255,255,.7),0 6px 15px rgba(75,39,29,.18);font-size:39px;position:relative}
+.sasha-avatar:after{content:'✦';position:absolute;right:-4px;top:-5px;color:var(--gold);font-size:20px;text-shadow:0 1px #fff}
+.sasha-title{font-size:28px;margin:0;color:#6d3a2e;font-weight:800;letter-spacing:-.04em}
+.sasha-sub{font-size:12px;font-weight:700;color:var(--sea5);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.sasha-chat{display:flex;flex-direction:column;gap:12px;min-height:180px;max-height:48vh;overflow:auto;padding:4px 1px 12px;scroll-behavior:smooth}
+.sasha-msg{max-width:91%;padding:12px 14px;border-radius:18px;font-size:14px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.sasha-msg.bot{align-self:flex-start;background:rgba(255,255,255,.88);border:1px solid #d9eee8;border-bottom-left-radius:5px}
+.sasha-msg.user{align-self:flex-end;background:linear-gradient(145deg,#d8f2eb,#b8e5d9);border:1px solid #a5d9cc;border-bottom-right-radius:5px}
+.sasha-prompts{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 12px}
+.sasha-prompts button{padding:8px 11px;border-radius:999px;border:1px solid #d9c36e;background:rgba(255,255,255,.75);font-size:12px;font-weight:700;text-align:left}
+.sasha-compose{display:flex;align-items:flex-end;gap:8px;padding-top:10px;border-top:1px solid var(--line)}
+.sasha-compose textarea{min-height:46px;max-height:110px;flex:1;padding:12px;border-radius:18px}
+.sasha-note{font-size:11px;line-height:1.4;color:var(--ink-soft);margin:9px 2px 0}
+@media(max-width:380px){.sasha-hero{grid-template-columns:64px 1fr;gap:11px}.sasha-avatar{width:62px;height:62px;font-size:32px}.sasha-title{font-size:25px}}
+
 /* tabs */
 nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;width:min(620px,calc(100% - 20px));
   display:grid;grid-template-columns:repeat(5,1fr);padding:7px;border-radius:28px;background:rgba(255,255,255,.72);
@@ -222,19 +239,6 @@ nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + e
 .tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border-radius:21px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.04em}
 .tabs button b{font-size:21px;line-height:1;font-weight:400}
 .tabs button.active{color:#4a3606;background:linear-gradient(180deg,#fff7d6 0%,#f0d67d 60%,#ddb847 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),0 4px 10px rgba(159,122,26,.3)}
-
-
-/* Sasha stylist preview */
-.sasha-hero{display:flex;align-items:center;gap:14px;text-align:left}
-.sasha-avatar{width:94px;height:112px;flex:none;border-radius:48% 48% 24px 24px;background:radial-gradient(circle at 50% 28%,#a96945 0 23%,transparent 24%),linear-gradient(145deg,#f8e7a7,#c9ece3 55%,#e9e0f8);display:grid;place-items:end center;font-size:52px;overflow:hidden;border:2px solid #e7ce77;box-shadow:0 5px 14px #22504b20}
-.sasha-bubble{padding:12px 14px;border-radius:18px 18px 18px 5px;background:rgba(255,255,255,.88);border:1px solid var(--glass-brd);font-size:14px;line-height:1.5;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
-.sasha-bubble.user{margin-left:24px;border-radius:18px 18px 5px 18px;background:#d7f0e8}
-.sasha-chatlog{max-height:44vh;overflow:auto;padding:2px}
-.sasha-prompts{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px}
-.sasha-prompts button{white-space:nowrap}
-.sasha-compose{display:flex;gap:8px;align-items:end}
-.sasha-compose textarea{flex:1;min-width:0;min-height:48px;max-height:120px}
-@media(max-width:370px){.tabs button{font-size:10px}.tabs button b{font-size:18px}.sasha-avatar{width:76px;height:94px;font-size:42px}}
 
 /* sheet */
 .sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(34,80,75,.25);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
@@ -275,8 +279,8 @@ code{background:rgba(255,255,255,.85);padding:1px 6px;border-radius:6px;font-siz
   <button data-act="tab" data-id="styles"><b>👑</b>Styles</button>
   <button data-act="tab" data-id="list"><b>🛍️</b>List</button>
   <button data-act="tab" data-id="plan"><b>🗓️</b>Planner</button>
-  <button data-act="tab" data-id="settings"><b>💎</b>Settings</button>
   <button data-act="tab" data-id="sasha"><b>💋</b>Sasha</button>
+  <button data-act="tab" data-id="settings"><b>💎</b>Settings</button>
 </nav>
 <div id="sheet" class="sheet-wrap" hidden><div class="sheet" role="dialog" aria-modal="true"><div id="sheetBody"></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -575,64 +579,6 @@ function render() {
   hydrate();
 }
 
-
-/* ---------- Sasha: local interactive preview ---------- */
-let sashaMessages = [{
-  role: 'sasha',
-  text: "Hey, babe 💋 I’m Sasha — your natural-hair planning bestie. I can help you choose a look, prep your products, and make a realistic hair-day plan. This preview uses the styles and tasks saved in this app; live AI and Google Calendar reading aren’t connected yet."
-}];
-function sashaReply(raw) {
-  const q = raw.toLowerCase();
-  const styles = S.styles || [];
-  const tasks = (S.tasks || []).filter(t => t.date >= today()).sort((a,b) => a.date.localeCompare(b.date));
-  const upcoming = tasks.slice(0,4);
-  const missing = S.shopping.filter(x => !x.done);
-  if (/help|what can you|what do you do|start/.test(q)) {
-    return "Baby, I can help you pick a style from your saved looks, check what supplies you’re missing, and map out wash day or install day. Try one of the prompts below. ✨";
-  }
-  if (/calendar|schedule|busy|free|when/.test(q)) {
-    return upcoming.length
-      ? "Here’s what I can see in your Crown Planner (this preview does not read Google Calendar yet):\n" + upcoming.map(t => "• " + t.date + " — " + t.title + (t.time && !t.allDay ? " at " + t.time : "")).join("\n") + "\n\nTell me which hair task you want to fit in, and we can sketch a time estimate."
-      : "Your Crown Planner doesn’t show any upcoming tasks yet, babe. Add a few planner events and I can use them in this preview. I’m not reading Google Calendar in this version.";
-  }
-  if (/shop|product|suppl|buy|missing|list/.test(q)) {
-    return missing.length
-      ? "Let’s get your kit together, babe 🛍️ Your unfinished shopping list has:\n" + missing.slice(0,12).map(x => "• " + x.name).join("\n") + "\n\nCheck off anything you already have so we don’t buy doubles."
-      : "Your shopping list is clear! 💅 Before buying anything new, check the products already saved in your style recipes.";
-  }
-  if (/wash|detangl|condition|cleanse/.test(q)) {
-    const wash = styles.find(s => /wash/i.test(s.name));
-    return wash ? "Wash-day check, babe 🫧 For your saved routine, “" + wash.name + ",” I’d start with these steps:\n" + (wash.steps || []).slice(0,8).map((x,i)=>(i+1)+". "+x.text).join("\n") + "\n\nTiming is only a starting estimate; adjust it for your detangling, hair density, and drying time."
-      : "Wash day needs breathing room, babe. Budget time for detangling, cleansing, conditioning, styling prep, and drying — not just the shower part. Add a wash routine under Styles and I can use your saved steps here.";
-  }
-  if (/style|look|hair|protective|twist|braid|choose/.test(q)) {
-    return styles.length
-      ? "Let’s work with the looks you’ve already saved 💋\n" + styles.slice(0,8).map((s,i)=>(i+1)+". "+s.emoji+" "+s.name+(s.notes ? " — "+s.notes : "")).join("\n") + "\n\nTell me the vibe, how long you want it to last, and how much time you have. I’ll help narrow it down."
-      : "Tell me the vibe you want, how much time you have, and whether you want a low-manipulation or statement look. Add saved looks in Styles and I can reference them here.";
-  }
-  if (/time|hour|long|estimate|duration|weekend|tonight/.test(q)) {
-    return "Real talk, babe: a style estimate should include detangling, sectioning, installation, drying, and finishing — not only the hands-on styling. For now, your planner’s duration fields are editable. Tell me which style you mean and I’ll help you break the time into stages.";
-  }
-  return "Okay, babe, let’s make a plan that works for your actual life — not a fantasy 3-hour wash day that somehow takes 7 😅. I can look at your saved styles, shopping list, and Crown Planner tasks in this preview. What look are we working on, and how much time do you have?";
-}
-function viewSasha() {
-  const log = sashaMessages.map(m => '<div class="sasha-bubble '+(m.role === 'user' ? 'user' : '')+'">'+esc(m.text)+'</div>').join('');
-  return '<section class="card hero goldline"><div class="sasha-hero"><div class="sasha-avatar" aria-label="Sasha avatar">👩🏾‍🦱</div><div><div class="eyebrow">YOUR HAIR BESTIE ✦</div><h2 class="script" style="margin:4px 0">Sasha 💋</h2><p class="muted" style="margin:0">Mocha glow. Golden energy. Natural-hair know-how.</p></div></div></section>'
-  + '<section class="card"><div class="sec-title"><h3>Talk to Sasha</h3><span class="chip gold">Preview</span></div><p class="muted">A first look at Sasha. This version is an interactive demo, not yet connected to a live AI model.</p><div class="sasha-chatlog" id="sashaLog" aria-live="polite">'+log+'</div>'
-  + '<div class="sasha-prompts"><button class="tmpl" data-act="sasha-prompt" data-text="Help me choose a hairstyle">💇🏾 Choose a look</button><button class="tmpl" data-act="sasha-prompt" data-text="What supplies am I missing?">🛍️ Shopping list</button><button class="tmpl" data-act="sasha-prompt" data-text="Help me plan wash day">🫧 Wash day</button><button class="tmpl" data-act="sasha-prompt" data-text="What is on my schedule?">🗓️ My schedule</button></div>'
-  + '<form data-form="sasha-chat"><div class="sasha-compose"><textarea name="message" rows="2" placeholder="Tell Sasha what you’re planning…" required aria-label="Message Sasha"></textarea><button class="btn gold" style="min-height:48px">Send ✦</button></div></form></section>';
-}
-function sendSashaMessage(message) {
-  const text = String(message || '').trim();
-  if (!text) return;
-  sashaMessages.push({role:'user',text});
-  sashaMessages.push({role:'sasha',text:sashaReply(text)});
-  if (sashaMessages.length > 18) sashaMessages = [sashaMessages[0], ...sashaMessages.slice(-16)];
-  render();
-  const log = $('#sashaLog');
-  if (log) log.scrollTop = log.scrollHeight;
-}
-
 function viewStyles() {
   const cards = S.styles.map(s => {
     const have = s.items.filter(i => i.have).length;
@@ -844,6 +790,77 @@ function viewPlan() {
     </section>`;
 }
 
+function viewSasha() {
+  const savedLooks = S.styles.length;
+  const upcoming = S.tasks.filter(t => { const d = nextOcc(t); return d && d <= addDays(today(), 21); }).length;
+  return `<section class="card sasha-hero goldline">
+      <div class="sasha-avatar" aria-label="Sasha, a mocha-skinned natural hair stylist">👩🏾‍🦱</div>
+      <div><div class="eyebrow">Your natural-hair bestie</div><h2 class="sasha-title">Sasha 💋</h2><div class="sasha-sub">Mocha glow · Crown confidence</div>
+      <p class="muted" style="margin:6px 0 0">Cute styles, realistic timelines, and a plan that respects your real life.</p></div>
+    </section>
+    <section class="card">
+      <div class="sasha-chat" id="sashaChat" aria-live="polite">
+        <div class="sasha-msg bot">Hey, gorgeous. 💋 I’m Sasha—your natural-hair girl. I know wash day can turn into a whole shift, so we’re planning for the actual time, not fantasy time.
+
+I can use the ${savedLooks} look${savedLooks === 1 ? '' : 's'} you’ve saved and your ${upcoming} upcoming planner task${upcoming === 1 ? '' : 's'} to help you get organized. This is my in-app preview for now; the live AI connection still needs to be wired up.</div>
+      </div>
+      <div class="sasha-prompts">
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me plan my next wash day">🫧 Plan wash day</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me choose a style from my saved looks">👑 Pick a style</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me make a realistic hair schedule for this week">🗓️ My week</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me figure out what products and tools I still need">🛍️ What am I missing?</button>
+      </div>
+      <form class="sasha-compose" data-form="sasha-chat">
+        <textarea name="message" rows="1" placeholder="Talk to me, babe…" aria-label="Message Sasha" required></textarea>
+        <button class="btn gold" aria-label="Send message">Send ✦</button>
+      </form>
+      <p class="sasha-note">Preview mode: Sasha’s look and chat space are here. Connecting a real AI requires a secure service endpoint; no API key belongs in this public HTML file.</p>
+    </section>`;
+}
+
+function sashaReply(message) {
+  const q = message.toLowerCase();
+  if (/wash|wash day|detangl|deep condition/.test(q)) {
+    return `Let’s make wash day realistic, babe. 🫧 Your saved wash-day steps are the starting point. I’d block time for detangling, cleansing, conditioning, styling, and cleanup—and keep drying time separate if you’re air-drying. Tell me your target day and how many hours you can give it, and we can shape a plan.
+
+I’m in preview mode right now, so I’m not adding calendar events for you yet.`;
+  }
+  if (/choose|pick a style|which style|style from/.test(q)) {
+    const looks = S.styles.slice(0, 4).map(x => `${x.emoji || '✨'} ${x.name}`).join('\n');
+    return looks ? `Okay, let’s work with the looks you’ve actually saved. 💅
+${looks}
+
+The best pick depends on your available time, how long you want it to last, and whether your hair is already prepped. Tell me those three things and I’ll help narrow it down.` : `First, let’s give you some options, babe. Add a look in Styles, then come back and we can plan around your real routine. 💋`;
+  }
+  if (/week|schedule|calendar|busy|time/.test(q)) {
+    const tasks = S.tasks.map(t => ({t,d:nextOcc(t)})).filter(x => x.d && x.d <= addDays(today(), 14)).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,6);
+    const list = tasks.length ? tasks.map(({t,d})=>`• ${fmtDate(d)} — ${t.title}${t.time ? ' at '+t.time : ''}`).join('\n') : '• No upcoming hair tasks in your planner yet.';
+    return `Let’s protect your time instead of pretending you have a free afternoon. 🗓️ Here’s what your Crown Planner currently shows coming up:
+${list}
+
+These are your saved planner tasks, not a live read of Google Calendar. For a proper conflict check, the Google Calendar read connection still needs to be added.`;
+  }
+  if (/missing|product|tool|shopping|buy|need/.test(q)) {
+    const missing = S.styles.flatMap(st => st.items.filter(i=>!i.have).map(i=>`${i.name} (${st.name})`));
+    return missing.length ? `Here’s what you’ve marked as still needed across your saved looks:
+${[...new Set(missing)].slice(0,12).map(x=>'• '+x).join('\n')}
+
+I’d check your stash before buying duplicates. Very cute to save money for the good stuff. 💸` : `Your saved looks don’t show any missing items right now. Either you’re stocked, or we need to add the products and tools for your next look. 💋`;
+  }
+  return `I hear you, babe. 💋 I’m in preview mode, so I can demonstrate how I’ll use your saved looks and planner—but I’m not connected to a live AI model yet. Try one of the prompts above, or tell me whether we’re planning wash day, choosing a style, or getting your week together.`;
+}
+
+function addSashaMessage(text, who) {
+  const box = $('#sashaChat'); if (!box) return;
+  const node = document.createElement('div'); node.className = `sasha-msg ${who}`; node.textContent = text;
+  box.appendChild(node); box.scrollTop = box.scrollHeight;
+}
+function sendSasha(message) {
+  const text = String(message || '').trim(); if (!text) return;
+  addSashaMessage(text, 'user');
+  window.setTimeout(() => addSashaMessage(sashaReply(text), 'bot'), 180);
+}
+
 function viewSettings() {
   const origin = location.origin && location.origin.startsWith('http') ? location.origin : 'https://YOUR-USERNAME.github.io';
   const unsynced = S.tasks.filter(t => !t.gEventId).length;
@@ -1005,7 +1022,6 @@ function addMissingToList(s) {
 const ACT = {
   'tab': el => { ui.tab = el.dataset.id; ui.styleId = null; render(); go(); },
   'open-style': el => { ui.styleId = el.dataset.id; render(); go(); },
-  'sasha-prompt': el => sendSashaMessage(el.dataset.text),
   'back-styles': () => { ui.styleId = null; render(); go(); },
   'new-style': () => openSheet(styleForm()),
   'edit-style': el => openSheet(styleForm(getStyle(el.dataset.id))),
@@ -1049,6 +1065,7 @@ const ACT = {
   },
   'del-video': el => { const s = getStyle(el.dataset.sid); s.videos = s.videos.filter(v => v.id !== el.dataset.id); save(); render(); },
   'plan-style': el => openSheet(wizardForm(getStyle(el.dataset.id))),
+  'sasha-prompt': el => sendSasha(el.dataset.prompt),
   'add-task': el => openSheet(taskForm(null, { date: ui.tab === 'plan' ? ui.day : today(), styleId: el.dataset.style || '' })),
   'template': el => openSheet(taskForm(null, { date: ui.day, title: el.dataset.title, duration: +el.dataset.dur })),
   'edit-task': el => openSheet(taskForm(getTask(el.dataset.id))),
@@ -1112,7 +1129,6 @@ const ACT = {
 };
 
 const FORMS = {
-  'sasha-chat': (f, fd) => { const input = f.querySelector('[name=message]'); const message = fd.get('message'); sendSashaMessage(message); },
   'style': (f, fd) => {
     const name = fd.get('name').trim(); if (!name) return;
     let s = getStyle(f.dataset.id);
@@ -1177,6 +1193,7 @@ const FORMS = {
     toast(`${out.length} tasks planned ✨`);
     if (sync && S.settings.clientId) syncMany(out);
   },
+  'sasha-chat': (f, fd) => { const input = f.elements.message; sendSasha(input.value); input.value = ''; },
   'settings-g': (f, fd) => {
     const cid = fd.get('clientId').trim();
     if (cid !== S.settings.clientId) { tok = null; S.settings.gLinked = false; try { sessionStorage.removeItem('cp.tok'); } catch (e) {} }
