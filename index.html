@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Crown Planner</title>
-<meta name="description" content="Plan it, slay it. Hair style recipes, shopping list and planner.">
+<meta name="description" content="Plan it, slay it. Your hairstyle library, shopping list and planner.">
 <meta name="theme-color" content="#f8efe5">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta property="og:title" content="Crown Planner">
@@ -914,7 +914,7 @@ function viewStyle(s) {
       <div class="style-detail-copy">
         <h2>${esc(s.name)}</h2>
         ${s.notes ? `<p>${esc(s.notes)}</p>` : ''}
-        <div class="detail-tags"><span>Natural hair</span><span>Style recipe</span><span>Personalized</span></div>
+        <div class="detail-tags"><span>Natural hair</span><span>Style guide</span><span>Personalized</span></div>
         <a class="detail-reference-link" href="https://afroindex.org/gallery" target="_blank" rel="noopener">Explore hairstyle references on Afro Index ↗</a>
         <div class="detail-stats"><div><span>▢</span><small>Wear time</small><strong>Set your own</strong></div><div><span>◷</span><small>Styling time</small><strong>Plan by day</strong></div></div>
         <button class="btn gold block" data-act="plan-style" data-id="${s.id}">▢ &nbsp; Plan this style</button>
@@ -1138,15 +1138,21 @@ function sashaReply(message) {
   // Handle explicit style comparisons and occasion-based requests before generic keyword replies.
   if (/vacation|holiday|trip|travel|beach|cruise/.test(q) &&
       /marley|faux loc|knotless/.test(q)) {
-    return `For vacation, I’d narrow it to these three based on low maintenance, comfort, and how much time you want to spend installing. 🤎
+    return `For your vacation, I’d keep all three on the shortlist—but the swimming question changes the trade-offs. 🤎
 
-• **Marley twists** — My pick if you want a bold, fluffy look and a fairly straightforward daily routine. They can feel bulky, so ask for a weight and size you’re comfortable with.
-• **Faux locs** — Great if you want a loc look without committing to locs. They can be heavier and take longer to install and remove, depending on the method.
-• **Knotless braids** — A versatile option with easy styling and a smooth, lightweight feel when done in a sensible size. They can take a long time to install, and the ends/scalp still need care.
+**If you’ll be swimming often**
+• **Knotless braids:** My first pick of these three for frequent swimming because they’re generally easier to rinse and dry through than loc-style extensions. Choose a manageable size and allow plenty of drying time at the roots.
+• **Marley twists:** Still possible, but the textured extension hair can hold water and take longer to dry. Smaller or lighter twists may be more comfortable.
+• **Faux locs:** I’d rank these third for frequent swimming; they can hold a lot of water and may take a long time to dry fully.
 
-**My recommendation:** Marley twists if your priority is a low-fuss vacation look; knotless braids if you want the most styling versatility; faux locs if the loc aesthetic is what you’re excited about. None should be installed tightly, and comfort matters more than keeping them in for a set number of weeks.
+**If you’ll mostly relax and sightsee**
+• **Marley twists:** Best for a full, textured look with a relatively simple daily routine.
+• **Faux locs:** Best if you really want the loc aesthetic and don’t mind potentially longer installation and drying times.
+• **Knotless braids:** Best for styling versatility—ponytails, buns, and updos.
 
-Two things would help me make the call: **How long is the vacation, and will you be swimming often?**`;
+**My take:** Knotless braids for a swim-heavy trip; Marley twists for a mostly dry vacation; faux locs if that look is your favorite. With any option, avoid tight installation, rinse out salt or chlorine promptly, and make sure your scalp and roots dry thoroughly. Swimming doesn’t make any style completely maintenance-free.
+
+How long is your trip, and are you leaning toward a shorter or longer hairstyle?`;
   }
   if (/goal/.test(q)) {
     return `Let’s make your hair goal doable, not overwhelming. 🤎 Pick one focus for the next four weeks: (1) retain length by reducing breakage, (2) keep your scalp comfortable, (3) get consistent with wash day, or (4) practice a new style. Start with one weekly action and track it in Crown Planner. What matters most to you?`;
@@ -1228,7 +1234,7 @@ function viewSettings() {
     </section>
     <section class="card">
       <div class="sec-title"><h3>Start fresh</h3></div>
-      <p class="muted" style="margin-top:-4px">Erase gives a blank app to build your own looks. Starter looks adds the wash day and twist recipes back. Google events stay on your calendar.</p>
+      <p class="muted" style="margin-top:-4px">Erase gives a blank app to build your own looks. Starter looks adds the wash day and twist guides back. Google events stay on your calendar.</p>
       <div class="btn-row"><button class="btn ghost sm" data-act="starters">🌀 Add starter looks</button>
       <button class="btn ghost danger sm" data-act="reset">Erase everything</button></div>
     </section>
