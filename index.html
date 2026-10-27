@@ -240,6 +240,13 @@ nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + e
 .tabs button b{font-size:21px;line-height:1;font-weight:400}
 .tabs button.active{color:#4a3606;background:linear-gradient(180deg,#fff7d6 0%,#f0d67d 60%,#ddb847 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),0 4px 10px rgba(159,122,26,.3)}
 
+.plan-intro{display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(115deg,#fff8df,#e8f7f3 72%);border:1px solid #eadba5}
+.plan-intro-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+.plan-intro-copy strong{font-size:15px;color:var(--ink)}
+.plan-intro-copy span{font-size:12px;line-height:1.45;color:var(--ink-soft)}
+.plan-intro .btn{flex-shrink:0}
+@media(max-width:380px){.plan-intro{align-items:flex-start;flex-direction:column}.plan-intro .btn{width:100%}}
+
 /* sheet */
 .sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(34,80,75,.25);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
 .sheet-wrap.open{opacity:1}
@@ -777,6 +784,10 @@ function viewPlan() {
   }
   const tmpl = TEMPLATES.map(([e, n, dur]) => `<button class="tmpl" data-act="template" data-title="${esc(n + ' ' + e)}" data-dur="${dur}">${e} ${n}</button>`).join('');
   return `${gStatus()}
+    <section class="card plan-intro">
+      <div class="plan-intro-copy"><strong>Your hair-care calendar</strong><span>Add tasks here anytime — Google Calendar is optional.</span></div>
+      <button class="btn gold" data-act="add-task">＋ Add task</button>
+    </section>
     <section class="card goldline">${viewMonth()}</section>
     <section class="card">
       <div class="sec-title"><h3>${ui.day === td ? 'Today' : fmtDate(ui.day, { weekday: 'long', month: 'short', day: 'numeric' })}</h3>
@@ -942,8 +953,7 @@ function taskForm(t, p = {}) {
       <label class="fld"><span>Reminder</span><select name="reminder">${REMINDERS.map(([v, l]) => opt(v, l, v === t.reminder)).join('')}</select></label>
     </div>
     <label class="fld"><span>Notes</span><textarea name="notes" rows="2">${esc(t.notes)}</textarea></label>
-    <label class="switch"><input type="checkbox" name="sync" ${t.sync ? 'checked' : ''}><span class="track"></span> Add to Google Calendar</label>
-    ${!S.settings.clientId ? '<p class="hint">Set up Google Calendar in Settings to turn this on 💎</p>' : ''}
+    ${S.settings.clientId ? `<label class="switch"><input type="checkbox" name="sync" ${t.sync ? 'checked' : ''}><span class="track"></span> Also add to Google Calendar</label>` : '<p class="hint">Saved only in Crown Planner — no Google setup needed. Connect Google later if you want calendar syncing 💎</p>'}
     ${t.gLink ? `<p class="hint"><a href="${esc(t.gLink)}" target="_blank" rel="noopener">Open in Google Calendar ↗</a></p>` : ''}
     <div class="sheet-actions">
       ${!isNew ? `<button type="button" class="btn ghost danger" data-act="del-task" data-id="${t.id}">Delete</button>` : ''}
