@@ -1,0 +1,1169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Crown Planner</title>
+<meta name="description" content="Plan it, slay it. Hair style recipes, shopping list and planner.">
+<meta name="theme-color" content="#cfeee6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Crown Planner">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{
+  --ink:#22504b; --ink-soft:#5f8b86; --line:#bfe3da;
+  --sea1:#e8f7f3; --sea2:#c9ece3; --sea3:#94d6c7; --sea4:#58b0a2; --sea5:#3a8c80;
+  --gold:#d4af37; --gold-dk:#9f7a1a; --gold-lt:#f7e7a6;
+  --lilac:#e9e0f8; --blush:#fbe6ee;
+  --glass:rgba(255,255,255,.58); --glass-brd:rgba(255,255,255,.9);
+  --gold-grad:linear-gradient(120deg,#9f7a1a 0%,#e9cf73 22%,#fff4c8 38%,#d4af37 55%,#f7e7a6 72%,#b08a22 100%);
+  --sea-grad:linear-gradient(180deg,#b6eadf 0%,#7fcbbb 55%,#5fb5a6 100%);
+  --holo:linear-gradient(110deg,#c9ece3,#e9e0f8,#fbe6ee,#f7e7a6,#c9ece3);
+  --radius:24px; --shadow:0 10px 28px rgba(34,80,75,.13);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{
+  font-family:'Quicksand',system-ui,-apple-system,sans-serif;color:var(--ink);min-height:100vh;
+  background:
+    radial-gradient(900px 520px at 0% -8%,#ffffff 0%,transparent 60%),
+    radial-gradient(700px 520px at 105% 6%,var(--lilac) 0%,transparent 58%),
+    radial-gradient(800px 640px at -12% 96%,var(--sea2) 0%,transparent 60%),
+    radial-gradient(600px 420px at 110% 90%,var(--blush) 0%,transparent 60%),
+    linear-gradient(165deg,#ecf8f5 0%,#d6f0e9 50%,#e9f5f7 100%);
+  background-attachment:fixed;
+  padding-bottom:calc(104px + env(safe-area-inset-bottom));
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;padding:0}
+.sparkles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.sparkles span{position:absolute;color:#fff;opacity:0;text-shadow:0 0 6px var(--gold-lt),0 0 14px #fff;animation:tw 3.6s infinite ease-in-out}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:.95;transform:scale(1) rotate(25deg)}}
+@media (prefers-reduced-motion:reduce){.sparkles span{animation:none;opacity:.5}*{transition:none!important}}
+
+.wrap{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 16px}
+header.top{text-align:center;padding:calc(18px + env(safe-area-inset-top)) 0 6px}
+.logo{font-family:'Great Vibes',cursive;font-weight:400;font-size:52px;line-height:1.05;margin:0;
+  background:var(--gold-grad);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 rgba(255,255,255,.9)) drop-shadow(0 4px 10px rgba(159,122,26,.25));animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.tag{margin:0;font-size:11px;letter-spacing:.38em;text-transform:uppercase;color:var(--sea5);font-weight:700}
+
+.script{font-family:'Great Vibes',cursive;font-weight:400;font-size:38px;line-height:1.1;margin:2px 0 6px;
+  background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 0 #fff)}
+.eyebrow{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;font-weight:700;color:var(--sea5)}
+.muted{color:var(--ink-soft);font-size:14.5px;margin:4px 0 14px;line-height:1.45}
+.hint{color:var(--ink-soft);font-size:12.5px;margin:6px 2px 0}
+.empty{text-align:center;color:var(--ink-soft);padding:22px 8px;font-size:14.5px}
+
+.card{position:relative;background:var(--glass);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+  border:1px solid var(--glass-brd);border-radius:var(--radius);box-shadow:var(--shadow),inset 0 1px 0 #fff;padding:18px;margin:14px 0}
+.goldline::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.6px;background:var(--gold-grad);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.hero{text-align:center;overflow:hidden}
+.hero::after{content:"✦";position:absolute;right:16px;top:12px;color:var(--gold);font-size:18px;opacity:.8}
+
+.sec-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}
+.sec-title h3{margin:0;font-size:15px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--sea5)}
+.sec-title h3::before{content:"✦ ";color:var(--gold)}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 20px;border-radius:999px;
+  font-weight:700;font-size:15px;color:#fff;background:var(--sea-grad);border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 6px 16px rgba(58,140,128,.35),inset 0 -3px 6px rgba(34,80,75,.2),inset 0 2px 0 rgba(255,255,255,.7);
+  text-shadow:0 1px 1px rgba(34,80,75,.35);overflow:hidden;transition:transform .12s}
+.btn::before{content:"";position:absolute;left:8%;right:8%;top:2px;height:45%;border-radius:999px;background:linear-gradient(rgba(255,255,255,.75),rgba(255,255,255,0));pointer-events:none}
+.btn:active{transform:scale(.97)}
+.btn.gold{background:linear-gradient(180deg,#fff3c4 0%,#e6c65c 45%,#c79b2a 100%);color:#4a3606;text-shadow:0 1px 0 rgba(255,255,255,.6);
+  box-shadow:0 6px 16px rgba(159,122,26,.35),inset 0 -3px 6px rgba(120,86,10,.25),inset 0 2px 0 rgba(255,255,255,.8)}
+.btn.ghost{background:rgba(255,255,255,.6);color:var(--ink);text-shadow:none;border:1.5px solid var(--line);box-shadow:none}
+.btn.ghost::before{display:none}
+.btn.danger{color:#b4475f;border-color:#f2c6d1}
+.btn.sm{padding:8px 14px;font-size:13.5px}
+.btn.block{width:100%}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.x{width:30px;height:30px;border-radius:50%;display:inline-grid;place-items:center;color:var(--ink-soft);font-size:14px;flex:none}
+.x:active{background:rgba(255,255,255,.7)}
+.x.sm{width:26px;height:26px;font-size:12px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;background:rgba(255,255,255,.65);border:1px solid var(--glass-brd);box-shadow:var(--shadow);font-size:17px}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;
+  background:var(--holo);background-size:300% 100%;border:1px solid rgba(255,255,255,.9);color:var(--ink);white-space:nowrap}
+.chip.gold{background:linear-gradient(180deg,#fff7d6,#f3dc8c);color:#6b5010;border-color:#f0dc9a}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.tmpl{flex:none;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.7);border:1px solid var(--glass-brd);font-weight:600;font-size:13.5px;box-shadow:0 3px 10px rgba(34,80,75,.08)}
+.tmpl:active{background:#fff}
+
+/* checks */
+.check{width:26px;height:26px;border-radius:50%;flex:none;border:2px solid var(--gold);background:rgba(255,255,255,.8);display:grid;place-items:center;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.08);transition:all .15s}
+.check.on{background:linear-gradient(180deg,#fff3c4,#d4af37);border-color:#c79b2a;box-shadow:0 0 0 3px rgba(247,231,166,.6)}
+.check.on::after{content:"✓";font-weight:700;font-size:14px;color:#4a3606}
+
+/* rows */
+.item{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px dashed var(--line)}
+.item:last-child{border-bottom:0}
+.item .iname{flex:1;font-weight:600;font-size:15px;line-height:1.3}
+.item .sub{display:block;font-size:12px;font-weight:500;color:var(--ink-soft)}
+.item.have .iname,.item.done .iname{color:var(--ink-soft);text-decoration:line-through;text-decoration-color:var(--gold)}
+.group-label{font-size:12px;font-weight:700;color:var(--ink-soft);margin:12px 0 2px;letter-spacing:.06em}
+
+/* forms */
+.fld{display:block;margin:10px 0}
+.fld>span{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sea5);margin:0 0 5px 4px}
+input[type=text],input[type=url],input[type=date],input[type=time],input[type=number],input:not([type]),select,textarea{
+  width:100%;padding:12px 14px;border-radius:16px;border:1.5px solid var(--line);background:rgba(255,255,255,.85);font-size:16px;outline:none;
+  box-shadow:inset 0 1px 2px rgba(34,80,75,.06);-webkit-appearance:none;appearance:none;min-height:46px}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--sea5) 50%),linear-gradient(135deg,var(--sea5) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(247,231,166,.55)}
+textarea{resize:vertical;min-height:70px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2 .fld{margin:6px 0}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-row input{flex:1;min-width:0}
+.add-row select{width:auto;flex:none}
+.add-row .btn{flex:none;padding:10px 16px}
+.switch{display:flex;align-items:center;gap:10px;margin:12px 2px;font-weight:600;font-size:15px;cursor:pointer}
+.switch input{position:absolute;opacity:0;pointer-events:none}
+.switch .track{width:48px;height:28px;border-radius:999px;background:#dfeeea;border:1.5px solid var(--line);position:relative;flex:none;transition:all .2s}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.18);transition:all .2s}
+.switch input:checked+.track{background:linear-gradient(180deg,#fff3c4,#d4af37);border-color:#c79b2a}
+.switch input:checked+.track::after{left:22px}
+.emojis{display:flex;flex-wrap:wrap;gap:6px}
+.emo input{position:absolute;opacity:0}
+.emo span{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;font-size:21px;background:rgba(255,255,255,.7);border:1.5px solid var(--line);cursor:pointer}
+.emo input:checked+span{border-color:var(--gold);box-shadow:0 0 0 3px rgba(247,231,166,.7);background:#fff}
+
+/* style grid */
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.style-card{text-align:left;border-radius:var(--radius);overflow:hidden;background:var(--glass);border:1px solid var(--glass-brd);box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative;transition:transform .15s}
+.style-card:active{transform:scale(.98)}
+.cover{aspect-ratio:4/5;position:relative;display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(150deg,#d5f2ea 0%,#a7dfd2 45%,#e9e0f8 80%,#fbe6ee 100%)}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cover::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,rgba(255,255,255,.55) 0%,rgba(255,255,255,0) 35%);pointer-events:none}
+.cover-emoji{font-size:58px;filter:drop-shadow(0 6px 10px rgba(34,80,75,.25))}
+.sc-body{padding:10px 12px 12px}
+.sc-name{font-weight:700;font-size:15.5px;line-height:1.25}
+.sc-meta{font-size:11.5px;color:var(--ink-soft);margin-top:3px;font-weight:600}
+
+/* detail */
+.detail-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 0}
+.back{font-weight:700;color:var(--sea5);font-size:15px;padding:8px 4px}
+.detail-hero{text-align:center;padding-top:22px}
+.detail-hero .big-emoji{font-size:44px;display:block}
+.notes{white-space:pre-wrap;font-size:14.5px;line-height:1.5;color:var(--ink);margin:6px 0 0}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photos button{aspect-ratio:1;border-radius:16px;overflow:hidden;position:relative;background:var(--sea2);border:2px solid #fff;box-shadow:0 4px 10px rgba(34,80,75,.12)}
+.photos img{width:100%;height:100%;object-fit:cover;display:block}
+.add-photo{aspect-ratio:1;border-radius:16px;border:2px dashed var(--gold);display:grid;place-items:center;text-align:center;font-size:12.5px;font-weight:700;color:var(--gold-dk);background:rgba(255,255,255,.5);cursor:pointer;padding:6px}
+.add-photo input{display:none}
+.add-photo b{display:block;font-size:24px}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line)}
+.steps li:last-child{border-bottom:0}
+.steps li::before{content:counter(s);flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;color:#4a3606;background:linear-gradient(180deg,#fff3c4,#e2bf50)}
+.steps li span{flex:1;font-size:15px;line-height:1.4;padding-top:3px}
+.video{background:rgba(255,255,255,.6);border:1px solid var(--glass-brd);border-radius:18px;padding:10px;margin:10px 0}
+.vhead{display:flex;align-items:center;gap:8px}
+.vtitle{flex:1;font-weight:600;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;flex:none}
+.badge.youtube{background:#e04a5f}.badge.tiktok{background:#1f2a2a}.badge.instagram{background:linear-gradient(90deg,#f6a04d,#d6457a,#8a54c9)}
+.badge.pinterest{background:#c8324a}.badge.link{background:var(--sea4)}
+.vframe{margin-top:8px;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#d5f2ea,#e9e0f8);display:grid;place-items:center;aspect-ratio:16/9}
+.vframe.tiktok,.vframe.instagram{aspect-ratio:9/14;max-height:640px}
+.vframe.pinterest{aspect-ratio:3/5;max-height:620px}
+.vframe iframe{width:100%;height:100%;border:0;display:block}
+.play{padding:12px 20px;border-radius:999px;font-weight:700;background:rgba(255,255,255,.85);box-shadow:var(--shadow)}
+.vlink{display:inline-block;margin-top:8px;font-size:13px;font-weight:700;color:var(--sea5);text-decoration:none}
+
+/* planner */
+.status{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.65);border:1px solid var(--glass-brd);margin:12px 0;font-size:14px;font-weight:600}
+.status .dot{width:10px;height:10px;border-radius:50%;background:#e2a0b0;box-shadow:0 0 0 4px rgba(226,160,176,.25);flex:none}
+.status.on .dot{background:#4fbf9f;box-shadow:0 0 0 4px rgba(79,191,159,.25)}
+.status span{flex:1}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-head h3{margin:0;font-family:'Great Vibes',cursive;font-weight:400;font-size:32px;background:var(--gold-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wk,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wk div{text-align:center;font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--ink-soft);padding:4px 0}
+.day{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:600;font-size:14.5px;background:rgba(255,255,255,.45);border:1px solid transparent}
+.day.out{opacity:.35}
+.day.today{border:1.5px solid var(--gold);background:rgba(255,247,214,.7)}
+.day.sel{background:var(--sea-grad);color:#fff;text-shadow:0 1px 1px rgba(34,80,75,.35);box-shadow:0 4px 12px rgba(58,140,128,.35)}
+.dots{display:flex;gap:2px;height:5px}
+.dots i{width:5px;height:5px;border-radius:50%;background:var(--gold)}
+.dots i.done{background:var(--sea4)}
+.day.sel .dots i{background:#fff3c4}
+.task{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px dashed var(--line)}
+.task:last-child{border-bottom:0}
+.task .tbody{flex:1;min-width:0;text-align:left}
+.task .ttitle{font-weight:700;font-size:15px;line-height:1.3}
+.task .tmeta{font-size:12px;color:var(--ink-soft);font-weight:600;margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.task.done .ttitle{text-decoration:line-through;color:var(--ink-soft);text-decoration-color:var(--gold)}
+.day-head{font-weight:700;font-size:13px;color:var(--sea5);letter-spacing:.06em;margin:14px 0 2px;text-transform:uppercase}
+
+/* tabs */
+nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;width:min(620px,calc(100% - 20px));
+  display:grid;grid-template-columns:repeat(4,1fr);padding:7px;border-radius:28px;background:rgba(255,255,255,.72);
+  backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid #fff;box-shadow:0 12px 30px rgba(34,80,75,.2)}
+.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border-radius:21px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.04em}
+.tabs button b{font-size:21px;line-height:1;font-weight:400}
+.tabs button.active{color:#4a3606;background:linear-gradient(180deg,#fff7d6 0%,#f0d67d 60%,#ddb847 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),0 4px 10px rgba(159,122,26,.3)}
+
+/* sheet */
+.sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(34,80,75,.25);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
+.sheet-wrap.open{opacity:1}
+.sheet{width:min(640px,100%);max-height:90vh;overflow:auto;-webkit-overflow-scrolling:touch;border-radius:30px 30px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,#fbfffe 0%,#eaf8f4 100%);box-shadow:0 -12px 40px rgba(34,80,75,.25);transform:translateY(40px);transition:transform .25s}
+.sheet-wrap.open .sheet{transform:none}
+.sheet::before{content:"";display:block;width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 6px}
+.sheet-head{display:flex;align-items:center;justify-content:space-between}
+.sheet-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.sheet-actions .btn.gold{flex:1}
+.viewer img{width:100%;border-radius:20px;display:block;margin:6px 0 12px;box-shadow:var(--shadow)}
+.pick{display:flex;align-items:center;gap:12px;width:100%;padding:12px;border-radius:18px;background:rgba(255,255,255,.7);border:1px solid var(--glass-brd);margin:8px 0;text-align:left;font-weight:700}
+.pick b{font-size:24px;font-weight:400}
+
+details.guide{background:rgba(255,255,255,.6);border-radius:18px;padding:12px 14px;margin-top:12px;border:1px solid var(--glass-brd)}
+details.guide summary{font-weight:700;cursor:pointer;color:var(--sea5)}
+details.guide ol{padding-left:20px;margin:10px 0 0;font-size:14px;line-height:1.55}
+details.guide li{margin-bottom:6px}
+code{background:rgba(255,255,255,.85);padding:1px 6px;border-radius:6px;font-size:12.5px;word-break:break-all}
+
+#toast{position:fixed;left:50%;bottom:calc(98px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);z-index:60;opacity:0;pointer-events:none;
+  padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;color:#4a3606;max-width:calc(100% - 32px);text-align:center;
+  background:linear-gradient(180deg,#fff7d6,#f0d67d);box-shadow:0 10px 24px rgba(159,122,26,.3);transition:all .25s}
+#toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="sparkles" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <h1 class="logo">Crown Planner</h1>
+    <p class="tag">plan it ✦ slay it</p>
+  </header>
+  <main id="view"></main>
+</div>
+<nav class="tabs" aria-label="Sections">
+  <button data-act="tab" data-id="styles"><b>👑</b>Styles</button>
+  <button data-act="tab" data-id="list"><b>🛍️</b>List</button>
+  <button data-act="tab" data-id="plan"><b>🗓️</b>Planner</button>
+  <button data-act="tab" data-id="settings"><b>💎</b>Settings</button>
+</nav>
+<div id="sheet" class="sheet-wrap" hidden><div class="sheet" role="dialog" aria-modal="true"><div id="sheetBody"></div></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- helpers ---------- */
+const KEY = 'crownPlanner.v1';
+const SCOPE = 'https://www.googleapis.com/auth/calendar.events';
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const pad = n => String(n).padStart(2, '0');
+const dstr = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const pdate = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const today = () => dstr(new Date());
+const addDays = (s, n) => { const d = pdate(s); d.setDate(d.getDate() + n); return dstr(d); };
+const fmtDate = (s, o = { weekday: 'short', month: 'short', day: 'numeric' }) => pdate(s).toLocaleDateString(undefined, o);
+const fmtTime = t => { if (!t) return ''; const [h, m] = t.split(':').map(Number); const d = new Date(); d.setHours(h, m, 0, 0); return d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' }); };
+const fmtDur = m => m < 60 ? `${m} min` : (m % 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m / 60} hr${m >= 120 ? 's' : ''}`);
+
+const CATS = { product: { label: 'Products', icon: '🧴' }, tool: { label: 'Tools', icon: '🪮' }, material: { label: 'Materials', icon: '🎀' }, other: { label: 'Other', icon: '✨' } };
+const REPEATS = {
+  none: { label: 'Does not repeat' },
+  w1: { label: 'Every week', freq: 'WEEKLY', n: 1, days: 7 },
+  w2: { label: 'Every 2 weeks', freq: 'WEEKLY', n: 2, days: 14 },
+  w4: { label: 'Every 4 weeks', freq: 'WEEKLY', n: 4, days: 28 },
+  w6: { label: 'Every 6 weeks', freq: 'WEEKLY', n: 6, days: 42 },
+  m1: { label: 'Every month', freq: 'MONTHLY', n: 1 }
+};
+const REMINDERS = [[-1, 'Google default'], [0, 'No reminder'], [30, '30 min before'], [60, '1 hour before'], [1440, '1 day before'], [2880, '2 days before']];
+const DURS = [15, 30, 45, 60, 90, 120, 180, 240, 300, 360, 480, 600];
+const TEMPLATES = [['🫧', 'Wash day', 240], ['🌿', 'Pre-poo', 30], ['💧', 'Deep condition', 45], ['♨️', 'Steam treatment', 30], ['💨', 'RevAir stretch', 60], ['🌀', 'Twist day', 180], ['✨', 'Refresh edges', 30], ['🪮', 'Take down', 120], ['✂️', 'Trim', 60], ['🛍️', 'Supply run', 60]];
+const EMOJIS = ['🌀', '💫', '✨', '👑', '🫧', '🦋', '🌸', '💎', '🎀', '🐚', '🌊', '💖', '🪩', '🌺', '⭐', '🍯'];
+const WASH_STEPS = [
+  'Pre-poo and finger detangle',
+  'Shampoo',
+  'Deep condition under the GLO Heat Cap or steamer. Detangle with the GLO brush. (Rinse-out conditioner instead if no protective style.)',
+  'Leave-in conditioner',
+  'Plaits to air dry and stay organized',
+  'Heat protectant, then stretch with the RevAir and brush'
+];
+
+/* ---------- state ---------- */
+const blank = () => ({ v: 1, styles: [], shopping: [], tasks: [], settings: { clientId: '', calendarId: 'primary', autoSync: true, gLinked: false } });
+
+function seed() {
+  const s = blank();
+  const it = (list, have = false) => list.map(([name, cat]) => ({ id: uid(), name, cat, have }));
+  const st = list => list.map(text => ({ id: uid(), text }));
+  const myTools = [['RevAir', 'tool'], ['GLO Heat Cap', 'tool'], ['Hair steamer', 'tool'], ['GLO detangling brush', 'tool'], ['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Blow dryer', 'tool'], ['Flat iron', 'tool'], ['Crochet hook', 'tool']];
+  const lco = [['Leave-in / liquid', 'product'], ['Oil', 'product'], ['Cream', 'product']];
+  s.styles.push(
+    { id: uid(), name: 'Wash Day Reset', emoji: '🫧', notes: 'My full wash day. Always heat protectant before the RevAir.',
+      items: [...it([['Pre-poo', 'product'], ['Shampoo', 'product'], ['Deep conditioner', 'product'], ['Rinse-out conditioner', 'product'], ['Leave-in conditioner', 'product'], ['Heat protectant', 'product']]),
+              ...it(myTools.slice(0, 6), true)],
+      steps: st(WASH_STEPS), inspo: [], videos: [] },
+    { id: uid(), name: 'Twist Out', emoji: '🌀', notes: 'Loose natural style. LCO plus styling gel.',
+      items: [...it([...lco, ['Styling gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
+      steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Styling gel', 'Two-strand twist', 'Let dry fully', 'Unravel and fluff']), inspo: [], videos: [] },
+    { id: uid(), name: 'Two-Strand Twists', emoji: '💫', notes: 'Protective style. LCO plus edge gel. Wear 2–4 weeks.',
+      items: [...it([...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
+      steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Two-strand twist', 'Lay edges with edge gel']), inspo: [], videos: [] },
+    { id: uid(), name: 'Twists with Added Hair', emoji: '👑', notes: 'Style the day after wash day or a few days later. Wear 2–4 weeks.',
+      items: [...it([['Added hair', 'material'], ...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Crochet hook', 'tool']], true)],
+      steps: st(['Start on stretched hair', 'Prep and section the added hair', 'Section', 'LCO: liquid, oil, cream', 'Twist with added hair', 'Finish the ends', 'Lay edges with edge gel']), inspo: [], videos: [] }
+  );
+  return s;
+}
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && s.v) return Object.assign(blank(), s, { settings: Object.assign(blank().settings, s.settings || {}) });
+  } catch (e) {}
+  return seed();
+}
+let S = load();
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch (e) { toast('Storage is full — export a backup in Settings 💾'); }
+}
+const ui = { tab: 'styles', styleId: null, month: today().slice(0, 7), day: today() };
+const getStyle = id => S.styles.find(s => s.id === id);
+const getTask = id => S.tasks.find(t => t.id === id);
+
+/* ---------- photo storage (IndexedDB) ---------- */
+const photoCache = new Map();
+const DB = {
+  p: null,
+  open() {
+    return this.p || (this.p = new Promise((res, rej) => {
+      const r = indexedDB.open('crownPlanner', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('photos');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }));
+  },
+  async tx(mode, fn) {
+    const db = await this.open();
+    return new Promise((res, rej) => {
+      const t = db.transaction('photos', mode);
+      const req = fn(t.objectStore('photos'));
+      t.oncomplete = () => res(req && req.result);
+      t.onerror = () => rej(t.error);
+    });
+  },
+  get(k) { return this.tx('readonly', s => s.get(k)); },
+  put(k, v) { return this.tx('readwrite', s => s.put(v, k)); },
+  del(k) { return this.tx('readwrite', s => s.delete(k)); }
+};
+async function hydrate() {
+  for (const img of document.querySelectorAll('img[data-photo]')) {
+    const id = img.dataset.photo;
+    let src = photoCache.get(id);
+    if (!src) { try { src = await DB.get(id); } catch (e) {} if (src) photoCache.set(id, src); }
+    if (src && img.src !== src) img.src = src;
+  }
+}
+function fileToDataURL(file, max = 1080) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => {
+      const sc = Math.min(1, max / Math.max(im.width, im.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(im.width * sc); c.height = Math.round(im.height * sc);
+      c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res(c.toDataURL('image/jpeg', 0.82));
+    };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Could not read that photo')); };
+    im.src = url;
+  });
+}
+
+/* ---------- video links ---------- */
+function parseVideo(raw) {
+  let u; try { u = new URL(String(raw).trim()); } catch (e) { return null; }
+  if (!/^https?:$/.test(u.protocol)) return null;
+  const h = u.hostname.replace(/^(www|m|vm|vt)\./, '');
+  const url = u.href; let m;
+  if (h === 'youtu.be') { const id = u.pathname.slice(1).split('/')[0]; if (id) return { platform: 'youtube', url, embed: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0` }; }
+  if (h.endsWith('youtube.com')) {
+    const id = u.searchParams.get('v') || ((m = u.pathname.match(/\/(shorts|embed|live)\/([\w-]+)/)) && m[2]);
+    if (id) return { platform: 'youtube', url, embed: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0` };
+    return { platform: 'youtube', url };
+  }
+  if (h.endsWith('tiktok.com')) {
+    if ((m = u.pathname.match(/\/video\/(\d+)/))) return { platform: 'tiktok', url, embed: `https://www.tiktok.com/embed/v2/${m[1]}` };
+    return { platform: 'tiktok', url };
+  }
+  if (h.endsWith('instagram.com')) {
+    if ((m = u.pathname.match(/\/(p|reel|reels|tv)\/([\w-]+)/))) return { platform: 'instagram', url, embed: `https://www.instagram.com/${m[1] === 'reels' ? 'reel' : m[1]}/${m[2]}/embed` };
+    return { platform: 'instagram', url };
+  }
+  if (h.includes('pinterest.') || h === 'pin.it') {
+    if ((m = u.pathname.match(/\/pin\/(\d+)/))) return { platform: 'pinterest', url, embed: `https://assets.pinterest.com/ext/embed.html?id=${m[1]}` };
+    return { platform: 'pinterest', url };
+  }
+  return { platform: 'link', url };
+}
+const PLATFORM = { youtube: 'YouTube', tiktok: 'TikTok', instagram: 'Instagram', pinterest: 'Pinterest', link: 'Link' };
+
+/* ---------- scheduling ---------- */
+function occursOn(t, ds) {
+  if (ds < t.date) return false;
+  if (ds === t.date) return true;
+  const r = REPEATS[t.repeat];
+  if (!r || !r.freq) return false;
+  if (r.freq === 'WEEKLY') return Math.round((pdate(ds) - pdate(t.date)) / 864e5) % r.days === 0;
+  if (r.freq === 'MONTHLY') return pdate(ds).getDate() === pdate(t.date).getDate();
+  return false;
+}
+const tasksOn = ds => S.tasks.filter(t => occursOn(t, ds)).sort((a, b) => (a.allDay === b.allDay ? (a.time || '').localeCompare(b.time || '') : a.allDay ? -1 : 1));
+const isDone = (t, ds) => (t.doneDates || []).includes(ds);
+function nextOcc(t, from = today()) {
+  for (let i = 0; i < 400; i++) { const d = addDays(from, i); if (occursOn(t, d)) return d; }
+  return null;
+}
+function nextForStyle(sid) {
+  let best = null;
+  for (const t of S.tasks) if (t.styleId === sid) { const d = nextOcc(t); if (d && (!best || d < best)) best = d; }
+  return best;
+}
+
+/* ---------- Google Calendar ---------- */
+let tok = null, tokExp = 0, tokenClient = null, tokenCid = '', pending = null;
+try { const t = JSON.parse(sessionStorage.getItem('cp.tok')); if (t && t.exp > Date.now()) { tok = t.tok; tokExp = t.exp; } } catch (e) {}
+const gisLoaded = () => !!(window.google && google.accounts && google.accounts.oauth2);
+const gReady = () => !!(tok && Date.now() < tokExp - 60000);
+
+function getToken() {
+  return new Promise((res, rej) => {
+    if (gReady()) return res(tok);
+    const cid = (S.settings.clientId || '').trim();
+    if (!cid) return rej(new Error('Add your Google Client ID in Settings first'));
+    if (!gisLoaded()) return rej(new Error('Google sign-in is still loading — try again in a sec'));
+    if (!tokenClient || tokenCid !== cid) {
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: cid, scope: SCOPE,
+        callback: r => {
+          const p = pending; pending = null; if (!p) return;
+          if (r.error) return p.rej(new Error(r.error_description || r.error));
+          tok = r.access_token; tokExp = Date.now() + (Number(r.expires_in) || 3600) * 1000;
+          try { sessionStorage.setItem('cp.tok', JSON.stringify({ tok, exp: tokExp })); } catch (e) {}
+          if (!S.settings.gLinked) { S.settings.gLinked = true; save(); }
+          p.res(tok);
+        },
+        error_callback: e => {
+          const p = pending; pending = null; if (!p) return;
+          p.rej(new Error(e && e.type === 'popup_closed' ? 'Google sign-in was closed' : 'Google sign-in could not open — allow pop-ups and try again'));
+        }
+      });
+      tokenCid = cid;
+    }
+    pending = { res, rej };
+    tokenClient.requestAccessToken({ prompt: S.settings.gLinked ? '' : 'consent' });
+  });
+}
+async function gApi(method, path, body) {
+  const t = await getToken();
+  const r = await fetch('https://www.googleapis.com/calendar/v3' + path, {
+    method, headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (r.status === 401) { tok = null; try { sessionStorage.removeItem('cp.tok'); } catch (e) {} throw new Error('Google session expired — tap sync again'); }
+  if (r.status === 204) return null;
+  if (!r.ok) { let msg = r.statusText; try { msg = (await r.json()).error.message; } catch (e) {} const err = new Error(msg); err.status = r.status; throw err; }
+  return r.json();
+}
+const calPath = () => '/calendars/' + encodeURIComponent((S.settings.calendarId || 'primary').trim()) + '/events';
+function endOf(date, time, mins) {
+  const [y, m, d] = date.split('-').map(Number); const [h, mi] = time.split(':').map(Number);
+  const e = new Date(y, m - 1, d, h, mi + mins);
+  return `${dstr(e)}T${pad(e.getHours())}:${pad(e.getMinutes())}:00`;
+}
+function toEvent(t) {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const st = getStyle(t.styleId);
+  const desc = [];
+  if (t.notes) desc.push(t.notes);
+  if (st) {
+    desc.push(`Style: ${st.emoji || ''} ${st.name}`);
+    if (st.items.length) desc.push('You’ll need:\n' + st.items.map(i => `${i.have ? '✓' : '•'} ${i.name}`).join('\n'));
+  }
+  desc.push('✦ from Crown Planner');
+  const ev = { summary: t.title, description: desc.join('\n\n'), colorId: '7' };
+  if (t.allDay) { ev.start = { date: t.date }; ev.end = { date: addDays(t.date, 1) }; }
+  else { ev.start = { dateTime: `${t.date}T${t.time}:00`, timeZone: tz }; ev.end = { dateTime: endOf(t.date, t.time, t.duration || 60), timeZone: tz }; }
+  const r = REPEATS[t.repeat];
+  if (r && r.freq) ev.recurrence = [`RRULE:FREQ=${r.freq};INTERVAL=${r.n}`];
+  ev.reminders = t.reminder < 0 ? { useDefault: true } : { useDefault: false, overrides: t.reminder > 0 ? [{ method: 'popup', minutes: t.reminder }] : [] };
+  return ev;
+}
+async function syncTask(t, quiet) {
+  try {
+    const body = toEvent(t); let ev;
+    if (t.gEventId) {
+      try { ev = await gApi('PUT', calPath() + '/' + encodeURIComponent(t.gEventId), body); }
+      catch (e) { if (e.status === 404 || e.status === 410) ev = await gApi('POST', calPath(), body); else throw e; }
+    } else ev = await gApi('POST', calPath(), body);
+    t.gEventId = ev.id; t.gLink = ev.htmlLink || ''; save(); render();
+    if (!quiet) toast('On your Google Calendar 💎');
+    return true;
+  } catch (e) { toast('Calendar: ' + e.message); return false; }
+}
+async function unsyncTask(t, quiet) {
+  if (!t.gEventId) return;
+  try { await gApi('DELETE', calPath() + '/' + encodeURIComponent(t.gEventId)); }
+  catch (e) { if (e.status !== 404 && e.status !== 410) { toast('Calendar: ' + e.message); return; } }
+  t.gEventId = null; t.gLink = ''; save(); render();
+  if (!quiet) toast('Removed from Google Calendar');
+}
+function syncMany(list) {
+  if (!list.length) return;
+  getToken().then(async () => {
+    let ok = 0;
+    for (const t of list) if (await syncTask(t, true)) ok++;
+    toast(`${ok} of ${list.length} added to Google Calendar 💎`);
+  }).catch(e => toast(e.message));
+}
+
+/* ---------- views ---------- */
+function render() {
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.dataset.id === ui.tab));
+  let html;
+  if (ui.tab === 'styles') html = ui.styleId && getStyle(ui.styleId) ? viewStyle(getStyle(ui.styleId)) : viewStyles();
+  else if (ui.tab === 'list') html = viewList();
+  else if (ui.tab === 'plan') html = viewPlan();
+  else html = viewSettings();
+  $('#view').innerHTML = html;
+  hydrate();
+}
+
+function viewStyles() {
+  const cards = S.styles.map(s => {
+    const have = s.items.filter(i => i.have).length;
+    const nx = nextForStyle(s.id);
+    const cover = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="">` : `<span class="cover-emoji">${esc(s.emoji || '💫')}</span>`;
+    return `<button class="style-card" data-act="open-style" data-id="${s.id}">
+      <div class="cover">${cover}</div>
+      <div class="sc-body"><div class="sc-name">${esc(s.name)}</div>
+      <div class="sc-meta">${have}/${s.items.length} ready · ${nx ? 'next ' + fmtDate(nx, { month: 'short', day: 'numeric' }) : 'not planned'}</div></div>
+    </button>`;
+  }).join('');
+  return `<section class="card hero goldline">
+      <div class="eyebrow">✦ my looks ✦</div>
+      <h2 class="script">Style Recipes</h2>
+      <p class="muted">Every look with its products, tools, steps, inspo pics and tutorials.</p>
+      <button class="btn gold" data-act="new-style">＋ New style</button>
+    </section>
+    ${cards ? `<div class="style-grid">${cards}</div>` : '<p class="empty">No styles yet. Add your first look ✨</p>'}`;
+}
+
+function viewStyle(s) {
+  const groups = Object.keys(CATS).map(c => {
+    const its = s.items.filter(i => i.cat === c);
+    if (!its.length) return '';
+    return `<div class="group-label">${CATS[c].icon} ${CATS[c].label}</div>` + its.map(i => `
+      <div class="item ${i.have ? 'have' : ''}">
+        <button class="check ${i.have ? 'on' : ''}" aria-label="Have it" data-act="toggle-have" data-sid="${s.id}" data-id="${i.id}"></button>
+        <span class="iname">${esc(i.name)}</span>
+        <button class="x sm" aria-label="Remove" data-act="del-item" data-sid="${s.id}" data-id="${i.id}">✕</button>
+      </div>`).join('');
+  }).join('');
+  const missing = s.items.filter(i => !i.have).length;
+  const steps = s.steps.map((st, i) => `<li><span>${esc(st.text)}</span>
+      ${i ? `<button class="x sm" aria-label="Move up" data-act="step-up" data-sid="${s.id}" data-id="${st.id}">↑</button>` : ''}
+      <button class="x sm" aria-label="Remove" data-act="del-step" data-sid="${s.id}" data-id="${st.id}">✕</button></li>`).join('');
+  const photos = s.inspo.map(p => `<button data-act="view-photo" data-sid="${s.id}" data-id="${esc(p)}"><img data-photo="${esc(p)}" alt="Inspo"></button>`).join('');
+  const videos = s.videos.map(v => videoCard(s, v)).join('');
+  const planned = S.tasks.filter(t => t.styleId === s.id).map(t => ({ t, d: nextOcc(t) || t.date })).sort((a, b) => a.d.localeCompare(b.d));
+  return `<div class="detail-top">
+      <button class="back" data-act="back-styles">‹ All styles</button>
+      <div><button class="icon-btn" aria-label="Edit style" data-act="edit-style" data-id="${s.id}">✎</button></div>
+    </div>
+    <section class="card hero goldline detail-hero">
+      <span class="big-emoji">${esc(s.emoji || '💫')}</span>
+      <h2 class="script">${esc(s.name)}</h2>
+      ${s.notes ? `<p class="notes">${esc(s.notes)}</p>` : ''}
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn gold" data-act="plan-style" data-id="${s.id}">📅 Plan this style</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="sec-title"><h3>What I need</h3><span class="chip gold">${s.items.length - missing}/${s.items.length} ready</span></div>
+      <p class="hint" style="margin-top:-4px">Tap the circle when you already have it.</p>
+      ${groups || '<p class="empty">Add products, tools and materials below.</p>'}
+      <form class="add-row" data-form="add-item" data-sid="${s.id}">
+        <input name="name" placeholder="Add an item…" autocomplete="off" required>
+        <select name="cat" aria-label="Category">${['product', 'tool', 'material'].map(c => `<option value="${c}">${CATS[c].icon}</option>`).join('')}</select>
+        <button class="btn sm">Add</button>
+      </form>
+      ${missing ? `<button class="btn ghost sm block" style="margin-top:12px" data-act="missing-to-list" data-id="${s.id}">🛍️ Add ${missing} missing item${missing > 1 ? 's' : ''} to my list</button>` : ''}
+    </section>
+
+    <section class="card">
+      <div class="sec-title"><h3>Steps</h3></div>
+      ${steps ? `<ol class="steps">${steps}</ol>` : '<p class="empty">Write out your routine for this look.</p>'}
+      <form class="add-row" data-form="add-step" data-sid="${s.id}">
+        <input name="text" placeholder="Add a step…" autocomplete="off" required>
+        <button class="btn sm">Add</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="sec-title"><h3>Inspo</h3></div>
+      <div class="photos">${photos}
+        <label class="add-photo"><input type="file" accept="image/*" multiple data-change="add-photos" data-sid="${s.id}"><span><b>＋</b>Add pics</span></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="sec-title"><h3>Tutorials</h3></div>
+      ${videos || '<p class="hint" style="margin-top:-4px">Paste links from YouTube, TikTok, Instagram or Pinterest.</p>'}
+      <form data-form="add-video" data-sid="${s.id}">
+        <input type="url" name="url" placeholder="Paste a video link…" required style="margin-top:8px">
+        <div class="add-row" style="margin-top:8px"><input name="title" placeholder="Name it (optional)" autocomplete="off"><button class="btn sm">Save</button></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="sec-title"><h3>Planned</h3>
+        <button class="btn ghost sm" data-act="add-task" data-style="${s.id}">＋ Task</button></div>
+      ${planned.length ? planned.map(({ t, d }) => taskRow(t, d, true)).join('') : '<p class="empty">Nothing planned yet. Tap “Plan this style” to map it out.</p>'}
+    </section>
+    <div style="text-align:center;margin:18px 0 8px"><button class="btn ghost danger sm" data-act="del-style" data-id="${s.id}">Delete this style</button></div>`;
+}
+
+function videoCard(s, v) {
+  const p = parseVideo(v.url) || { platform: 'link', url: v.url };
+  const label = PLATFORM[p.platform];
+  return `<div class="video">
+    <div class="vhead"><span class="badge ${p.platform}">${label}</span><span class="vtitle">${esc(v.title || '')}</span>
+      <button class="x sm" aria-label="Remove" data-act="del-video" data-sid="${s.id}" data-id="${v.id}">✕</button></div>
+    ${p.embed ? `<div class="vframe ${p.platform}" data-embed="${esc(p.embed)}"><button class="play" data-act="play-video">▶ Play here</button></div>` : ''}
+    <a class="vlink" href="${esc(p.url)}" target="_blank" rel="noopener">Open in ${p.platform === 'link' ? 'browser' : label} ↗</a>
+  </div>`;
+}
+
+function taskRow(t, ds, showDate) {
+  const st = getStyle(t.styleId);
+  const done = isDone(t, ds);
+  const meta = [];
+  if (showDate) meta.push(fmtDate(ds));
+  meta.push(t.allDay ? 'All day' : `${fmtTime(t.time)} · ${fmtDur(t.duration || 60)}`);
+  return `<div class="task ${done ? 'done' : ''}">
+    <button class="check ${done ? 'on' : ''}" aria-label="Done" data-act="toggle-done" data-id="${t.id}" data-date="${ds}"></button>
+    <button class="tbody" data-act="edit-task" data-id="${t.id}">
+      <div class="ttitle">${esc(t.title)}</div>
+      <div class="tmeta">${esc(meta.join(' · '))}
+        ${REPEATS[t.repeat] && REPEATS[t.repeat].freq ? '<span class="chip">↻ repeats</span>' : ''}
+        ${st && !showDate ? `<span class="chip">${esc(st.emoji)} ${esc(st.name)}</span>` : ''}
+        ${t.gEventId ? '<span class="chip gold">📅 Google</span>' : ''}</div>
+    </button>
+  </div>`;
+}
+
+function viewList() {
+  const open = S.shopping.filter(i => !i.done), got = S.shopping.filter(i => i.done);
+  const row = i => {
+    const st = getStyle(i.styleId);
+    return `<div class="item ${i.done ? 'done' : ''}">
+      <button class="check ${i.done ? 'on' : ''}" aria-label="Got it" data-act="shop-toggle" data-id="${i.id}"></button>
+      <span class="iname">${esc(i.name)}${st ? `<span class="sub">for ${esc(st.emoji)} ${esc(st.name)}</span>` : ''}</span>
+      <button class="x sm" aria-label="Remove" data-act="shop-del" data-id="${i.id}">✕</button>
+    </div>`;
+  };
+  const groups = Object.keys(CATS).map(c => {
+    const its = open.filter(i => (i.cat || 'other') === c);
+    return its.length ? `<div class="group-label">${CATS[c].icon} ${CATS[c].label}</div>${its.map(row).join('')}` : '';
+  }).join('');
+  return `<section class="card hero goldline">
+      <div class="eyebrow">✦ shopping ✦</div>
+      <h2 class="script">Hair Haul List</h2>
+      <form class="add-row" data-form="shop-add">
+        <input name="name" placeholder="Add something…" autocomplete="off" required>
+        <select name="cat" aria-label="Category">${Object.keys(CATS).map(c => `<option value="${c}">${CATS[c].icon}</option>`).join('')}</select>
+        <button class="btn sm">Add</button>
+      </form>
+      ${S.styles.length ? '<button class="btn ghost sm block" style="margin-top:10px" data-act="shop-from-style">👑 Pull what I need from a style</button>' : ''}
+    </section>
+    <section class="card">
+      <div class="sec-title"><h3>To get</h3><span class="chip gold">${open.length}</span></div>
+      ${groups || '<p class="empty">All stocked up, babe 💖</p>'}
+    </section>
+    ${got.length ? `<section class="card">
+      <div class="sec-title"><h3>In the bag</h3><button class="btn ghost sm" data-act="shop-clear">Clear</button></div>
+      ${got.map(row).join('')}</section>` : ''}`;
+}
+
+function viewMonth() {
+  const [y, m] = ui.month.split('-').map(Number);
+  const first = new Date(y, m - 1, 1);
+  const dim = new Date(y, m, 0).getDate();
+  const weeks = Math.ceil((first.getDay() + dim) / 7);
+  const start = new Date(y, m - 1, 1 - first.getDay());
+  const td = today();
+  let cells = '';
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+    const ds = dstr(d);
+    const items = tasksOn(ds);
+    const dots = items.slice(0, 3).map(t => `<i class="${isDone(t, ds) ? 'done' : ''}"></i>`).join('');
+    cells += `<button class="day ${d.getMonth() !== m - 1 ? 'out' : ''} ${ds === td ? 'today' : ''} ${ds === ui.day ? 'sel' : ''}" data-act="pick-day" data-id="${ds}" aria-label="${fmtDate(ds)}"><span>${d.getDate()}</span><b class="dots">${dots}</b></button>`;
+  }
+  const wk = ['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(x => `<div>${x}</div>`).join('');
+  return `<div class="cal-head">
+      <button class="icon-btn" aria-label="Previous month" data-act="cal-prev">‹</button>
+      <h3>${first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</h3>
+      <button class="icon-btn" aria-label="Next month" data-act="cal-next">›</button>
+    </div>
+    <div class="wk">${wk}</div><div class="grid">${cells}</div>`;
+}
+
+function gStatus() {
+  if (!S.settings.clientId) return `<div class="status"><i class="dot"></i><span>Google Calendar not set up</span><button class="btn ghost sm" data-act="tab" data-id="settings">Set up</button></div>`;
+  if (gReady()) return `<div class="status on"><i class="dot"></i><span>Google Calendar connected</span></div>`;
+  return `<div class="status"><i class="dot"></i><span>${S.settings.gLinked ? 'Tap to reconnect Google' : 'Connect Google Calendar'}</span><button class="btn sm" data-act="g-connect">Connect</button></div>`;
+}
+
+function viewPlan() {
+  const dayTasks = tasksOn(ui.day);
+  const td = today();
+  const upcoming = [];
+  for (let i = 0; i < 21 && upcoming.length < 12; i++) {
+    const d = addDays(td, i);
+    for (const t of tasksOn(d)) upcoming.push({ t, d });
+  }
+  const tmpl = TEMPLATES.map(([e, n, dur]) => `<button class="tmpl" data-act="template" data-title="${esc(n + ' ' + e)}" data-dur="${dur}">${e} ${n}</button>`).join('');
+  return `${gStatus()}
+    <section class="card goldline">${viewMonth()}</section>
+    <section class="card">
+      <div class="sec-title"><h3>${ui.day === td ? 'Today' : fmtDate(ui.day, { weekday: 'long', month: 'short', day: 'numeric' })}</h3>
+        <button class="btn sm" data-act="add-task">＋ Task</button></div>
+      <div class="chips">${tmpl}</div>
+      ${dayTasks.length ? dayTasks.map(t => taskRow(t, ui.day, false)).join('') : '<p class="empty">Free day ✨ Tap a quick add above.</p>'}
+    </section>
+    <section class="card">
+      <div class="sec-title"><h3>Coming up</h3></div>
+      ${upcoming.length ? upcoming.map(({ t, d }) => taskRow(t, d, true)).join('') : '<p class="empty">Nothing in the next 3 weeks.</p>'}
+    </section>`;
+}
+
+function viewSettings() {
+  const origin = location.origin && location.origin.startsWith('http') ? location.origin : 'https://YOUR-USERNAME.github.io';
+  const unsynced = S.tasks.filter(t => !t.gEventId).length;
+  return `<section class="card hero goldline">
+      <div class="eyebrow">✦ settings ✦</div>
+      <h2 class="script">Google Calendar</h2>
+      ${gStatus()}
+      <form data-form="settings-g" style="text-align:left">
+        <label class="fld"><span>Google Client ID</span><input name="clientId" value="${esc(S.settings.clientId)}" placeholder="xxxx.apps.googleusercontent.com" autocomplete="off"></label>
+        <label class="fld"><span>Calendar</span><input name="calendarId" value="${esc(S.settings.calendarId)}" placeholder="primary" autocomplete="off"></label>
+        <label class="switch"><input type="checkbox" name="autoSync" ${S.settings.autoSync ? 'checked' : ''}><span class="track"></span> New tasks go to Google by default</label>
+        <button class="btn gold block">Save</button>
+      </form>
+      ${S.settings.clientId ? `<div class="btn-row" style="justify-content:center">
+        <button class="btn sm" data-act="g-sync-all">📅 Send ${unsynced} unsynced task${unsynced === 1 ? '' : 's'} to Google</button>
+        ${gReady() ? '<button class="btn ghost sm" data-act="g-disconnect">Disconnect</button>' : ''}</div>` : ''}
+      <details class="guide" style="text-align:left">
+        <summary>How to get your Client ID (one time, ~10 min)</summary>
+        <ol>
+          <li>Go to <b>console.cloud.google.com</b> and create a project called <b>Crown Planner</b>.</li>
+          <li>Search for <b>Google Calendar API</b> and tap <b>Enable</b>.</li>
+          <li>Open <b>Google Auth Platform</b> → <b>Branding</b>. Set the app name and your email. Choose <b>External</b> audience.</li>
+          <li>Under <b>Audience</b> → <b>Test users</b>, add your own Gmail.</li>
+          <li>Under <b>Clients</b>, create an <b>OAuth client</b> → type <b>Web application</b>. In <b>Authorized JavaScript origins</b> add:<br><code>${esc(origin)}</code></li>
+          <li>Copy the <b>Client ID</b>, paste it above, tap Save, then Connect.</li>
+          <li>Google will say the app isn’t verified. That’s expected for your own app. Tap <b>Continue</b>.</li>
+        </ol>
+      </details>
+    </section>
+    <section class="card">
+      <div class="sec-title"><h3>Backup</h3></div>
+      <p class="muted" style="margin-top:-4px">Everything lives on this phone. Export a backup now and then so you never lose your looks.</p>
+      <div class="btn-row">
+        <button class="btn sm" data-act="export">💾 Export backup</button>
+        <label class="btn ghost sm" style="cursor:pointer">📥 Import<input type="file" accept="application/json,.json" data-change="import-file" hidden></label>
+      </div>
+    </section>
+    <section class="card">
+      <div class="sec-title"><h3>Start fresh</h3></div>
+      <p class="muted" style="margin-top:-4px">Erase gives a blank app to build your own looks. Starter looks adds the wash day and twist recipes back. Google events stay on your calendar.</p>
+      <div class="btn-row"><button class="btn ghost sm" data-act="starters">🌀 Add starter looks</button>
+      <button class="btn ghost danger sm" data-act="reset">Erase everything</button></div>
+    </section>
+    <p class="hint" style="text-align:center;margin:18px 0">Crown Planner ✦ made for you</p>`;
+}
+
+/* ---------- forms in sheets ---------- */
+function styleForm(s) {
+  const cur = s ? s.emoji : EMOJIS[0];
+  return `<form data-form="style" data-id="${s ? s.id : ''}">
+    <div class="sheet-head"><h3 class="script">${s ? 'Edit style' : 'New style'}</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+    <label class="fld"><span>Style name</span><input name="name" required value="${esc(s ? s.name : '')}" placeholder="Goddess locs, wash & go, bun…"></label>
+    <div class="fld"><span>Pick a charm</span><div class="emojis">${EMOJIS.map(e => `<label class="emo"><input type="radio" name="emoji" value="${e}" ${e === cur ? 'checked' : ''}><span>${e}</span></label>`).join('')}</div></div>
+    <label class="fld"><span>Notes</span><textarea name="notes" rows="3" placeholder="Length, size, who does it, price…">${esc(s ? s.notes : '')}</textarea></label>
+    <div class="sheet-actions"><button class="btn gold">Save ✦</button></div>
+  </form>`;
+}
+
+function taskForm(t, p = {}) {
+  const isNew = !t;
+  t = t || { id: '', title: p.title || '', date: p.date || ui.day, allDay: false, time: '10:00', duration: p.duration || 60, repeat: 'none', reminder: 60, notes: '', styleId: p.styleId || '', sync: !!S.settings.clientId && S.settings.autoSync };
+  const opt = (v, l, sel) => `<option value="${v}" ${sel ? 'selected' : ''}>${l}</option>`;
+  const styleOpts = opt('', '— none —', !t.styleId) + S.styles.map(s => opt(s.id, `${esc(s.emoji)} ${esc(s.name)}`, s.id === t.styleId)).join('');
+  const durs = DURS.concat(DURS.includes(t.duration) ? [] : [t.duration]).sort((a, b) => a - b);
+  return `<form data-form="task" data-id="${t.id}">
+    <div class="sheet-head"><h3 class="script">${isNew ? 'New task' : 'Edit task'}</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+    <label class="fld"><span>What</span><input name="title" required value="${esc(t.title)}" placeholder="Wash day, install, trim…"></label>
+    <div class="row2">
+      <label class="fld"><span>Date</span><input type="date" name="date" required value="${t.date}"></label>
+      <label class="fld"><span>Style</span><select name="styleId">${styleOpts}</select></label>
+    </div>
+    <label class="switch"><input type="checkbox" name="allDay" ${t.allDay ? 'checked' : ''} data-change="allday"><span class="track"></span> All day</label>
+    <div class="row2 timefields" ${t.allDay ? 'hidden' : ''}>
+      <label class="fld"><span>Start</span><input type="time" name="time" value="${t.time || '10:00'}"></label>
+      <label class="fld"><span>How long</span><select name="duration">${durs.map(d => opt(d, fmtDur(d), d === t.duration)).join('')}</select></label>
+    </div>
+    <div class="row2">
+      <label class="fld"><span>Repeat</span><select name="repeat">${Object.entries(REPEATS).map(([k, r]) => opt(k, r.label, k === t.repeat)).join('')}</select></label>
+      <label class="fld"><span>Reminder</span><select name="reminder">${REMINDERS.map(([v, l]) => opt(v, l, v === t.reminder)).join('')}</select></label>
+    </div>
+    <label class="fld"><span>Notes</span><textarea name="notes" rows="2">${esc(t.notes)}</textarea></label>
+    <label class="switch"><input type="checkbox" name="sync" ${t.sync ? 'checked' : ''}><span class="track"></span> Add to Google Calendar</label>
+    ${!S.settings.clientId ? '<p class="hint">Set up Google Calendar in Settings to turn this on 💎</p>' : ''}
+    ${t.gLink ? `<p class="hint"><a href="${esc(t.gLink)}" target="_blank" rel="noopener">Open in Google Calendar ↗</a></p>` : ''}
+    <div class="sheet-actions">
+      ${!isNew ? `<button type="button" class="btn ghost danger" data-act="del-task" data-id="${t.id}">Delete</button>` : ''}
+      <button class="btn gold">Save ✦</button>
+    </div>
+  </form>`;
+}
+
+function wizardForm(s) {
+  const def = addDays(today(), 7);
+  const added = /added|braid|loc|crochet|wig|sew/i.test(s.name);
+  const washOpts = '<option value="">— no wash routine —</option>' + S.styles.map(x => `<option value="${x.id}" ${/wash/i.test(x.name) ? 'selected' : ''}>${esc(x.emoji)} ${esc(x.name)}</option>`).join('');
+  const sel = (n, list, d) => `<select name="${n}">${list.map(([v, l]) => `<option value="${v}" ${v === d ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+  const hrs = [1, 2, 3, 4, 5, 6, 7, 8, 10].map(h => [h, `${h} hr${h > 1 ? 's' : ''}`]);
+  const ck = (n, label, sub, on = true) => `<label class="switch"><input type="checkbox" name="${n}" ${on ? 'checked' : ''}><span class="track"></span><span>${label}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${sub}</span></span></label>`;
+  return `<form data-form="wizard" data-id="${s.id}">
+    <div class="sheet-head"><h3 class="script">Plan it, babe</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+    <p class="muted" style="margin-top:0">${esc(s.emoji)} ${esc(s.name)}: pick wash day and style day, and I’ll map out the rest.</p>
+    <div class="row2">
+      <label class="fld"><span>Wash day</span><input type="date" name="date" required value="${def}"></label>
+      <label class="fld"><span>Start time</span><input type="time" name="washTime" value="09:00"></label>
+    </div>
+    <div class="row2">
+      <label class="fld"><span>Wash takes</span>${sel('washHours', hrs, 4)}</label>
+      <label class="fld"><span>Wash routine</span><select name="washStyle">${washOpts}</select></label>
+    </div>
+    <div class="row2">
+      <label class="fld"><span>Style day</span>${sel('styleOffset', [[0, 'Same day'], [1, 'Next day'], [2, '2 days later'], [3, '3 days later']], added ? 1 : 0)}</label>
+      <label class="fld"><span>Style start</span><input type="time" name="time" value="${added ? '10:00' : '15:00'}"></label>
+    </div>
+    <div class="row2">
+      <label class="fld"><span>Styling takes</span>${sel('hours', hrs, added ? 6 : 2)}</label>
+      <label class="fld"><span>Wear it for</span>${sel('weeks', [0, 1, 2, 3, 4, 5, 6, 8].map(w => [w, w ? w + ' week' + (w > 1 ? 's' : '') : 'Not sure']), 3)}</label>
+    </div>
+    <div class="eyebrow" style="margin-top:12px">Add these to my planner</div>
+    ${ck('shop', 'Supply run 🛍️', '3 days before wash day, with your missing items')}
+    ${ck('wash', 'Wash day 🫧', 'With your wash routine steps in the notes')}
+    ${ck('install', 'Style day 🌀', 'With this style’s steps in the notes')}
+    ${ck('refresh', 'Mid-way refresh ✨', 'Halfway through: edges, scalp, re-twist as needed')}
+    ${ck('takedown', 'Take down 🪮', 'At the end of the wear time, ready for the next wash day')}
+    <hr style="border:0;border-top:1px dashed var(--line);margin:8px 0">
+    <label class="switch"><input type="checkbox" name="sync" ${S.settings.clientId ? 'checked' : ''}><span class="track"></span> Add to Google Calendar</label>
+    <div class="sheet-actions"><button class="btn gold">Add to my planner ✦</button></div>
+  </form>`;
+}
+
+function openSheet(html) {
+  $('#sheetBody').innerHTML = html;
+  const w = $('#sheet'); w.hidden = false;
+  requestAnimationFrame(() => w.classList.add('open'));
+  $('.sheet').scrollTop = 0;
+  hydrate();
+}
+function closeSheet() {
+  const w = $('#sheet'); w.classList.remove('open');
+  setTimeout(() => { if (!w.classList.contains('open')) { w.hidden = true; $('#sheetBody').innerHTML = ''; } }, 260);
+}
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+const go = () => window.scrollTo({ top: 0 });
+
+function addMissingToList(s) {
+  let n = 0;
+  for (const i of s.items) {
+    if (i.have || S.shopping.some(x => x.styleItemId === i.id && !x.done)) continue;
+    S.shopping.push({ id: uid(), name: i.name, cat: i.cat, done: false, styleId: s.id, styleItemId: i.id }); n++;
+  }
+  save();
+  return n;
+}
+
+/* ---------- actions ---------- */
+const ACT = {
+  'tab': el => { ui.tab = el.dataset.id; ui.styleId = null; render(); go(); },
+  'open-style': el => { ui.styleId = el.dataset.id; render(); go(); },
+  'back-styles': () => { ui.styleId = null; render(); go(); },
+  'new-style': () => openSheet(styleForm()),
+  'edit-style': el => openSheet(styleForm(getStyle(el.dataset.id))),
+  'del-style': el => {
+    const s = getStyle(el.dataset.id); if (!s || !confirm(`Delete “${s.name}”? Its photos go too.`)) return;
+    s.inspo.forEach(p => DB.del(p).catch(() => {}));
+    S.styles = S.styles.filter(x => x !== s);
+    S.tasks.forEach(t => { if (t.styleId === s.id) t.styleId = ''; });
+    S.shopping.forEach(i => { if (i.styleId === s.id) { i.styleId = ''; i.styleItemId = ''; } });
+    save(); ui.styleId = null; render(); go(); toast('Style deleted');
+  },
+  'toggle-have': el => {
+    const s = getStyle(el.dataset.sid), i = s && s.items.find(x => x.id === el.dataset.id); if (!i) return;
+    i.have = !i.have;
+    S.shopping.forEach(x => { if (x.styleItemId === i.id) x.done = i.have; });
+    save(); render();
+  },
+  'del-item': el => { const s = getStyle(el.dataset.sid); if (!s) return; s.items = s.items.filter(x => x.id !== el.dataset.id); save(); render(); },
+  'missing-to-list': el => { const n = addMissingToList(getStyle(el.dataset.id)); toast(n ? `${n} added to your list 🛍️` : 'Already on your list 💖'); render(); },
+  'del-step': el => { const s = getStyle(el.dataset.sid); s.steps = s.steps.filter(x => x.id !== el.dataset.id); save(); render(); },
+  'step-up': el => {
+    const s = getStyle(el.dataset.sid); const i = s.steps.findIndex(x => x.id === el.dataset.id);
+    if (i > 0) { [s.steps[i - 1], s.steps[i]] = [s.steps[i], s.steps[i - 1]]; save(); render(); }
+  },
+  'view-photo': el => openSheet(`<div class="viewer">
+      <div class="sheet-head"><h3 class="script">Inspo</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+      <img data-photo="${esc(el.dataset.id)}" alt="Inspo">
+      <div class="sheet-actions"><button class="btn ghost danger" data-act="del-photo" data-sid="${el.dataset.sid}" data-id="${esc(el.dataset.id)}">Delete photo</button>
+      <button class="btn" data-act="cover-photo" data-sid="${el.dataset.sid}" data-id="${esc(el.dataset.id)}">Make cover</button></div></div>`),
+  'del-photo': el => {
+    const s = getStyle(el.dataset.sid); s.inspo = s.inspo.filter(p => p !== el.dataset.id);
+    DB.del(el.dataset.id).catch(() => {}); photoCache.delete(el.dataset.id); save(); closeSheet(); render();
+  },
+  'cover-photo': el => {
+    const s = getStyle(el.dataset.sid); s.inspo = [el.dataset.id, ...s.inspo.filter(p => p !== el.dataset.id)];
+    save(); closeSheet(); render(); toast('New cover pic ✨');
+  },
+  'play-video': el => {
+    const fr = el.closest('.vframe');
+    fr.innerHTML = `<iframe src="${esc(fr.dataset.embed)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="Video"></iframe>`;
+  },
+  'del-video': el => { const s = getStyle(el.dataset.sid); s.videos = s.videos.filter(v => v.id !== el.dataset.id); save(); render(); },
+  'plan-style': el => openSheet(wizardForm(getStyle(el.dataset.id))),
+  'add-task': el => openSheet(taskForm(null, { date: ui.tab === 'plan' ? ui.day : today(), styleId: el.dataset.style || '' })),
+  'template': el => openSheet(taskForm(null, { date: ui.day, title: el.dataset.title, duration: +el.dataset.dur })),
+  'edit-task': el => openSheet(taskForm(getTask(el.dataset.id))),
+  'del-task': el => {
+    const t = getTask(el.dataset.id); if (!t || !confirm(`Delete “${t.title}”${t.repeat !== 'none' ? ' and all its repeats' : ''}?`)) return;
+    S.tasks = S.tasks.filter(x => x !== t); save(); closeSheet(); render();
+    if (t.gEventId && S.settings.clientId) unsyncTask(t, false);
+  },
+  'toggle-done': el => {
+    const t = getTask(el.dataset.id); const d = el.dataset.date; t.doneDates = t.doneDates || [];
+    if (isDone(t, d)) t.doneDates = t.doneDates.filter(x => x !== d); else { t.doneDates.push(d); toast('Slayed ✨'); }
+    save(); render();
+  },
+  'pick-day': el => { ui.day = el.dataset.id; ui.month = ui.day.slice(0, 7); render(); },
+  'cal-prev': () => { const [y, m] = ui.month.split('-').map(Number); ui.month = dstr(new Date(y, m - 2, 1)).slice(0, 7); render(); },
+  'cal-next': () => { const [y, m] = ui.month.split('-').map(Number); ui.month = dstr(new Date(y, m, 1)).slice(0, 7); render(); },
+  'shop-toggle': el => {
+    const i = S.shopping.find(x => x.id === el.dataset.id); i.done = !i.done;
+    const s = getStyle(i.styleId); const si = s && s.items.find(x => x.id === i.styleItemId); if (si) si.have = i.done;
+    save(); render();
+  },
+  'shop-del': el => { S.shopping = S.shopping.filter(x => x.id !== el.dataset.id); save(); render(); },
+  'shop-clear': () => { S.shopping = S.shopping.filter(x => !x.done); save(); render(); },
+  'shop-from-style': () => openSheet(`<div class="sheet-head"><h3 class="script">Which look?</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+      ${S.styles.map(s => `<button class="pick" data-act="shop-pick-style" data-id="${s.id}"><b>${esc(s.emoji)}</b><span>${esc(s.name)}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${s.items.filter(i => !i.have).length} missing</span></span></button>`).join('')}`),
+  'shop-pick-style': el => { const n = addMissingToList(getStyle(el.dataset.id)); closeSheet(); render(); toast(n ? `${n} added 🛍️` : 'Nothing missing 💖'); },
+  'g-connect': () => getToken().then(() => { toast('Google Calendar connected ✨'); render(); }).catch(e => toast(e.message)),
+  'g-disconnect': () => {
+    if (tok && gisLoaded()) google.accounts.oauth2.revoke(tok, () => {});
+    tok = null; tokExp = 0; S.settings.gLinked = false; save();
+    try { sessionStorage.removeItem('cp.tok'); } catch (e) {}
+    render(); toast('Disconnected');
+  },
+  'g-sync-all': () => {
+    const list = S.tasks.filter(t => !t.gEventId);
+    if (!list.length) return toast('Everything is already on Google 💎');
+    list.forEach(t => t.sync = true); save();
+    syncMany(list);
+  },
+  'export': async () => {
+    const photos = {};
+    for (const s of S.styles) for (const p of s.inspo) { try { const v = photoCache.get(p) || await DB.get(p); if (v) photos[p] = v; } catch (e) {} }
+    const blob = new Blob([JSON.stringify({ ...S, photos })], { type: 'application/json' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `crown-planner-backup-${today()}.json`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast('Backup saved 💾');
+  },
+  'reset': () => {
+    if (!confirm('Erase all styles, lists and tasks on this device?')) return;
+    S.styles.forEach(s => s.inspo.forEach(p => DB.del(p).catch(() => {})));
+    const keep = { clientId: S.settings.clientId, calendarId: S.settings.calendarId, autoSync: S.settings.autoSync, gLinked: S.settings.gLinked };
+    S = blank(); S.settings = Object.assign(S.settings, keep); save(); ui.styleId = null; ui.tab = 'styles'; render(); go(); toast('Fresh start ✨');
+  },
+  'starters': () => {
+    const have = new Set(S.styles.map(s => s.name));
+    const add = seed().styles.filter(s => !have.has(s.name));
+    S.styles.push(...add); save(); ui.tab = 'styles'; ui.styleId = null; render(); go();
+    toast(add.length ? `${add.length} starter looks added 🌀` : 'Starter looks are already here');
+  },
+  'close-sheet': () => closeSheet()
+};
+
+const FORMS = {
+  'style': (f, fd) => {
+    const name = fd.get('name').trim(); if (!name) return;
+    let s = getStyle(f.dataset.id);
+    if (!s) { s = { id: uid(), items: [], steps: [], inspo: [], videos: [] }; S.styles.unshift(s); }
+    Object.assign(s, { name, emoji: fd.get('emoji') || '💫', notes: fd.get('notes').trim() });
+    save(); closeSheet(); ui.tab = 'styles'; ui.styleId = s.id; render(); go();
+  },
+  'add-item': (f, fd) => {
+    const s = getStyle(f.dataset.sid); const name = fd.get('name').trim(); if (!name) return;
+    s.items.push({ id: uid(), name, cat: fd.get('cat'), have: false }); save(); render();
+    const inp = document.querySelector(`form[data-form="add-item"] input[name=name]`); if (inp) inp.focus();
+  },
+  'add-step': (f, fd) => {
+    const s = getStyle(f.dataset.sid); const text = fd.get('text').trim(); if (!text) return;
+    s.steps.push({ id: uid(), text }); save(); render();
+    const inp = document.querySelector(`form[data-form="add-step"] input[name=text]`); if (inp) inp.focus();
+  },
+  'add-video': (f, fd) => {
+    const s = getStyle(f.dataset.sid); const p = parseVideo(fd.get('url'));
+    if (!p) return toast('That link doesn’t look right — paste the full https:// link');
+    s.videos.push({ id: uid(), url: p.url, title: fd.get('title').trim() }); save(); render();
+    toast(p.embed ? 'Tutorial saved ▶' : 'Link saved ↗');
+  },
+  'shop-add': (f, fd) => {
+    const name = fd.get('name').trim(); if (!name) return;
+    S.shopping.push({ id: uid(), name, cat: fd.get('cat'), done: false, styleId: '', styleItemId: '' }); save(); render();
+    const inp = document.querySelector(`form[data-form="shop-add"] input[name=name]`); if (inp) inp.focus();
+  },
+  'task': (f, fd) => {
+    let t = getTask(f.dataset.id);
+    const data = {
+      title: fd.get('title').trim(), date: fd.get('date'), styleId: fd.get('styleId') || '', allDay: fd.get('allDay') === 'on',
+      time: fd.get('time') || '10:00', duration: +fd.get('duration') || 60, repeat: fd.get('repeat') || 'none',
+      reminder: +fd.get('reminder'), notes: fd.get('notes').trim(), sync: fd.get('sync') === 'on'
+    };
+    if (!data.title || !data.date) return;
+    if (!t) { t = { id: uid(), doneDates: [] }; S.tasks.push(t); }
+    Object.assign(t, data); save(); closeSheet();
+    if (ui.tab === 'plan') { ui.day = t.date; ui.month = t.date.slice(0, 7); }
+    render();
+    if (t.sync && S.settings.clientId) syncTask(t);
+    else if (!t.sync && t.gEventId && S.settings.clientId) unsyncTask(t);
+    else toast('Saved ✨');
+  },
+  'wizard': (f, fd) => {
+    const s = getStyle(f.dataset.id); const date = fd.get('date'); if (!s || !date) return;
+    const weeks = +fd.get('weeks') || 0, sync = fd.get('sync') === 'on';
+    const styleDay = addDays(date, +fd.get('styleOffset') || 0);
+    const ws = getStyle(fd.get('washStyle'));
+    const list = x => x.steps.map((st, i) => `${i + 1}. ${st.text}`).join('\n');
+    const missingOf = x => x ? x.items.filter(i => !i.have).map(i => '• ' + i.name) : [];
+    const missing = [...new Set([...missingOf(ws), ...missingOf(s)])].join('\n');
+    const mk = o => ({ id: uid(), doneDates: [], styleId: s.id, repeat: 'none', allDay: false, time: '10:00', duration: 60, reminder: 60, notes: '', sync, ...o });
+    const out = [];
+    if (fd.get('shop') === 'on') out.push(mk({ title: `Supply run for ${s.name} 🛍️`, date: addDays(date, -3), allDay: true, reminder: -1, notes: missing ? 'Still need:\n' + missing : 'You have everything 💖' }));
+    if (fd.get('wash') === 'on') out.push(mk({ title: `Wash day for ${s.name} 🫧`, date, time: fd.get('washTime') || '09:00', duration: (+fd.get('washHours') || 4) * 60, notes: ws && ws.steps.length ? list(ws) : '' }));
+    if (fd.get('install') === 'on') out.push(mk({ title: `${s.name} style day 🌀`, date: styleDay, time: fd.get('time') || '10:00', duration: (+fd.get('hours') || 2) * 60, notes: list(s) }));
+    if (weeks >= 2 && fd.get('refresh') === 'on') out.push(mk({ title: `${s.name} refresh ✨`, date: addDays(styleDay, Math.round(weeks * 7 / 2)), allDay: true, reminder: -1, notes: 'Edges, scalp care, re-twist as needed.' }));
+    if (weeks > 0 && fd.get('takedown') === 'on') out.push(mk({ title: `Take down ${s.name} 🪮`, date: addDays(styleDay, weeks * 7), duration: 120, notes: 'Take down gently, then plan the next wash day.' }));
+    if (!out.length) return toast('Pick at least one thing to add');
+    S.tasks.push(...out); save(); closeSheet(); render();
+    toast(`${out.length} tasks planned ✨`);
+    if (sync && S.settings.clientId) syncMany(out);
+  },
+  'settings-g': (f, fd) => {
+    const cid = fd.get('clientId').trim();
+    if (cid !== S.settings.clientId) { tok = null; S.settings.gLinked = false; try { sessionStorage.removeItem('cp.tok'); } catch (e) {} }
+    S.settings.clientId = cid;
+    S.settings.calendarId = fd.get('calendarId').trim() || 'primary';
+    S.settings.autoSync = fd.get('autoSync') === 'on';
+    save(); render(); toast('Saved 💎');
+  }
+};
+
+const CHG = {
+  'allday': el => { const tf = el.form.querySelector('.timefields'); if (tf) tf.hidden = el.checked; },
+  'add-photos': async el => {
+    const s = getStyle(el.dataset.sid); const files = [...el.files]; if (!files.length) return;
+    toast('Adding pics…');
+    let n = 0;
+    for (const f of files) {
+      try { const data = await fileToDataURL(f); const id = 'p_' + uid(); await DB.put(id, data); photoCache.set(id, data); s.inspo.push(id); n++; }
+      catch (e) { toast(e.message); }
+    }
+    save(); render(); if (n) toast(`${n} pic${n > 1 ? 's' : ''} added 📸`);
+  },
+  'import-file': async el => {
+    const f = el.files[0]; if (!f) return;
+    try {
+      const d = JSON.parse(await f.text());
+      if (!d || !Array.isArray(d.styles) || !Array.isArray(d.tasks)) throw new Error('bad');
+      if (!confirm('Replace what’s on this phone with this backup?')) return;
+      const photos = d.photos || {}; delete d.photos;
+      for (const [k, v] of Object.entries(photos)) { await DB.put(k, v); photoCache.set(k, v); }
+      S = Object.assign(blank(), d, { settings: Object.assign(blank().settings, S.settings, d.settings || {}) });
+      save(); ui.styleId = null; render(); toast('Backup restored ✨');
+    } catch (e) { toast('That file isn’t a Crown Planner backup'); }
+    el.value = '';
+  }
+};
+
+document.addEventListener('click', e => {
+  if (e.target.id === 'sheet') return closeSheet();
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = ACT[el.dataset.act]; if (fn) { e.preventDefault(); fn(el, e); }
+});
+document.addEventListener('submit', e => {
+  const f = e.target; const fn = FORMS[f.dataset.form];
+  if (fn) { e.preventDefault(); fn(f, new FormData(f)); }
+});
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-change]'); if (el && CHG[el.dataset.change]) CHG[el.dataset.change](el);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#sheet').hidden) closeSheet(); });
+
+/* sparkles */
+const sp = $('.sparkles');
+for (let i = 0; i < 16; i++) {
+  const s = document.createElement('span'); s.textContent = i % 3 ? '✦' : '✧';
+  s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;font-size:${8 + Math.random() * 14}px;animation-delay:${(Math.random() * 3.6).toFixed(2)}s;animation-duration:${(3 + Math.random() * 3).toFixed(2)}s`;
+  sp.appendChild(s);
+}
+
+if (!localStorage.getItem(KEY)) save();
+render();
+})();
+</script>
+</body>
+</html>
