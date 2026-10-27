@@ -776,18 +776,25 @@ function render() {
   hydrate();
 }
 
-function photoByStyle(name, width = 700) {
-    const n = name.toLowerCase();
-    const photos = [
-      [/box braid|knotless/i, 'https://images.pexels.com/photos/13767165/pexels-photo-13767165.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/cornrow/i, 'https://images.pexels.com/photos/5672900/pexels-photo-5672900.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/loc|dread/i, 'https://images.pexels.com/photos/11617524/pexels-photo-11617524.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/kinky|marley|twist|flat twist/i, 'https://images.pexels.com/photos/7951589/pexels-photo-7951589.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/wash|twist out|wash.?and.?go|natural curl|afro|puff|bantu|flexi|rod/i, 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/braid/i, 'https://images.pexels.com/photos/5722771/pexels-photo-5722771.jpeg?auto=compress&cs=tinysrgb&w=' + width]
-    ];
-    const match = photos.find(([pattern]) => pattern.test(n));
-    return match ? match[1] : '';
+function photoByStyle(name) {
+  const n = name.toLowerCase();
+  const photos = [
+    [/wash and go|wash.?and.?go|natural curl|afro|puff/i, 'wash-and-go.jpg'],
+    [/twist out/i, 'twist-out.jpg'],
+    [/knotless/i, 'knotless-braids.jpg'],
+    [/box braid/i, 'box-braids.jpg'],
+    [/cornrow/i, 'cornrows.jpg'],
+    [/mini twist/i, 'mini-twists.jpg'],
+    [/two.?strand twist/i, 'two-strand-twists.jpg'],
+    [/kinky|marley|twists with added hair/i, 'kinky-marley-twists.jpg'],
+    [/goddess loc/i, 'goddess-locs.jpg'],
+    [/faux loc/i, 'faux-locs.jpg'],
+    [/loc|dread/i, 'goddess-locs.jpg'],
+    [/braid/i, 'box-braids.jpg'],
+    [/twist/i, 'two-strand-twists.jpg']
+  ];
+  const match = photos.find(([pattern]) => pattern.test(n));
+  return match ? match[1] : '';
 }
 
 function viewStyles() {
@@ -851,7 +858,7 @@ function viewStyle(s) {
     <section class="style-detail-hero">
       <div class="style-detail-photo">
         ${s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="${esc(s.name)} inspiration">` :
-          `<img src="${photoByStyle(s.name, 1100) || 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=1100'}" alt="${esc(s.name)} hairstyle reference" loading="lazy" onerror="this.style.display='none'">`}
+          `<img src="${photoByStyle(s.name)}" alt="${esc(s.name)} hairstyle reference" loading="lazy" onerror="this.style.display='none'">`}
         <button class="photo-back" data-act="back-styles" aria-label="Back to hairstyles">‹</button>
         <button class="photo-fav" data-act="edit-style" data-id="${s.id}" aria-label="Edit hairstyle">♡</button>
       </div>
@@ -1194,7 +1201,7 @@ function wizardForm(s) {
   const def = addDays(today(), 7);
   const added = /added|braid|loc|crochet|wig|sew/i.test(s.name);
   const photo = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="">` :
-     `<img src="${photoByStyle(s.name, 700) || 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=700'}" alt="" onerror="this.style.display='none'">`;
+     `<img src="${photoByStyle(s.name)}" alt="" onerror="this.style.display='none'">`;
   const sel = (n, list, d) => `<select name="${n}">${list.map(([v, l]) => `<option value="${v}" ${String(v) === String(d) ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
   const hrs = [1, 2, 3, 4, 5, 6, 7, 8, 10].map(h => [h, `${h} hr${h > 1 ? 's' : ''}`]);
   const ck = (n, label, sub, on = false) => `<label class="switch"><input type="checkbox" name="${n}" ${on ? 'checked' : ''}><span class="track"></span><span>${label}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${sub}</span></span></label>`;
