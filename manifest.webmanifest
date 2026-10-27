@@ -1,15 +1,15 @@
 {
   "name": "Crown Planner",
   "short_name": "Crown",
-  "description": "Plan it, slay it. Hair style recipes, shopping list and planner.",
+  "description": "A beautiful home for your natural-hair routines, styles, and plans.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#e8f7f3",
-  "theme_color": "#cfeee6",
+  "background_color": "#fff8f0",
+  "theme_color": "#f8efe5",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+    { "src": "icon.svg?v=2", "sizes": "any", "type": "image/svg+xml" }
   ]
 }
