@@ -217,11 +217,24 @@ textarea{resize:vertical;min-height:70px}
 
 /* tabs */
 nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:20;width:min(620px,calc(100% - 20px));
-  display:grid;grid-template-columns:repeat(4,1fr);padding:7px;border-radius:28px;background:rgba(255,255,255,.72);
+  display:grid;grid-template-columns:repeat(5,1fr);padding:7px;border-radius:28px;background:rgba(255,255,255,.72);
   backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid #fff;box-shadow:0 12px 30px rgba(34,80,75,.2)}
 .tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border-radius:21px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:.04em}
 .tabs button b{font-size:21px;line-height:1;font-weight:400}
 .tabs button.active{color:#4a3606;background:linear-gradient(180deg,#fff7d6 0%,#f0d67d 60%,#ddb847 100%);box-shadow:inset 0 2px 0 rgba(255,255,255,.8),0 4px 10px rgba(159,122,26,.3)}
+
+
+/* Sasha stylist preview */
+.sasha-hero{display:flex;align-items:center;gap:14px;text-align:left}
+.sasha-avatar{width:94px;height:112px;flex:none;border-radius:48% 48% 24px 24px;background:radial-gradient(circle at 50% 28%,#a96945 0 23%,transparent 24%),linear-gradient(145deg,#f8e7a7,#c9ece3 55%,#e9e0f8);display:grid;place-items:end center;font-size:52px;overflow:hidden;border:2px solid #e7ce77;box-shadow:0 5px 14px #22504b20}
+.sasha-bubble{padding:12px 14px;border-radius:18px 18px 18px 5px;background:rgba(255,255,255,.88);border:1px solid var(--glass-brd);font-size:14px;line-height:1.5;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.sasha-bubble.user{margin-left:24px;border-radius:18px 18px 5px 18px;background:#d7f0e8}
+.sasha-chatlog{max-height:44vh;overflow:auto;padding:2px}
+.sasha-prompts{display:flex;gap:7px;overflow-x:auto;padding:4px 0 10px}
+.sasha-prompts button{white-space:nowrap}
+.sasha-compose{display:flex;gap:8px;align-items:end}
+.sasha-compose textarea{flex:1;min-width:0;min-height:48px;max-height:120px}
+@media(max-width:370px){.tabs button{font-size:10px}.tabs button b{font-size:18px}.sasha-avatar{width:76px;height:94px;font-size:42px}}
 
 /* sheet */
 .sheet-wrap{position:fixed;inset:0;z-index:40;background:rgba(34,80,75,.25);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;opacity:0;transition:opacity .22s}
@@ -263,6 +276,7 @@ code{background:rgba(255,255,255,.85);padding:1px 6px;border-radius:6px;font-siz
   <button data-act="tab" data-id="list"><b>🛍️</b>List</button>
   <button data-act="tab" data-id="plan"><b>🗓️</b>Planner</button>
   <button data-act="tab" data-id="settings"><b>💎</b>Settings</button>
+  <button data-act="tab" data-id="sasha"><b>💋</b>Sasha</button>
 </nav>
 <div id="sheet" class="sheet-wrap" hidden><div class="sheet" role="dialog" aria-modal="true"><div id="sheetBody"></div></div></div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -555,9 +569,68 @@ function render() {
   if (ui.tab === 'styles') html = ui.styleId && getStyle(ui.styleId) ? viewStyle(getStyle(ui.styleId)) : viewStyles();
   else if (ui.tab === 'list') html = viewList();
   else if (ui.tab === 'plan') html = viewPlan();
+  else if (ui.tab === 'sasha') html = viewSasha();
   else html = viewSettings();
   $('#view').innerHTML = html;
   hydrate();
+}
+
+
+/* ---------- Sasha: local interactive preview ---------- */
+let sashaMessages = [{
+  role: 'sasha',
+  text: "Hey, babe 💋 I’m Sasha — your natural-hair planning bestie. I can help you choose a look, prep your products, and make a realistic hair-day plan. This preview uses the styles and tasks saved in this app; live AI and Google Calendar reading aren’t connected yet."
+}];
+function sashaReply(raw) {
+  const q = raw.toLowerCase();
+  const styles = S.styles || [];
+  const tasks = (S.tasks || []).filter(t => t.date >= today()).sort((a,b) => a.date.localeCompare(b.date));
+  const upcoming = tasks.slice(0,4);
+  const missing = S.shopping.filter(x => !x.done);
+  if (/help|what can you|what do you do|start/.test(q)) {
+    return "Baby, I can help you pick a style from your saved looks, check what supplies you’re missing, and map out wash day or install day. Try one of the prompts below. ✨";
+  }
+  if (/calendar|schedule|busy|free|when/.test(q)) {
+    return upcoming.length
+      ? "Here’s what I can see in your Crown Planner (this preview does not read Google Calendar yet):\n" + upcoming.map(t => "• " + t.date + " — " + t.title + (t.time && !t.allDay ? " at " + t.time : "")).join("\n") + "\n\nTell me which hair task you want to fit in, and we can sketch a time estimate."
+      : "Your Crown Planner doesn’t show any upcoming tasks yet, babe. Add a few planner events and I can use them in this preview. I’m not reading Google Calendar in this version.";
+  }
+  if (/shop|product|suppl|buy|missing|list/.test(q)) {
+    return missing.length
+      ? "Let’s get your kit together, babe 🛍️ Your unfinished shopping list has:\n" + missing.slice(0,12).map(x => "• " + x.name).join("\n") + "\n\nCheck off anything you already have so we don’t buy doubles."
+      : "Your shopping list is clear! 💅 Before buying anything new, check the products already saved in your style recipes.";
+  }
+  if (/wash|detangl|condition|cleanse/.test(q)) {
+    const wash = styles.find(s => /wash/i.test(s.name));
+    return wash ? "Wash-day check, babe 🫧 For your saved routine, “" + wash.name + ",” I’d start with these steps:\n" + (wash.steps || []).slice(0,8).map((x,i)=>(i+1)+". "+x.text).join("\n") + "\n\nTiming is only a starting estimate; adjust it for your detangling, hair density, and drying time."
+      : "Wash day needs breathing room, babe. Budget time for detangling, cleansing, conditioning, styling prep, and drying — not just the shower part. Add a wash routine under Styles and I can use your saved steps here.";
+  }
+  if (/style|look|hair|protective|twist|braid|choose/.test(q)) {
+    return styles.length
+      ? "Let’s work with the looks you’ve already saved 💋\n" + styles.slice(0,8).map((s,i)=>(i+1)+". "+s.emoji+" "+s.name+(s.notes ? " — "+s.notes : "")).join("\n") + "\n\nTell me the vibe, how long you want it to last, and how much time you have. I’ll help narrow it down."
+      : "Tell me the vibe you want, how much time you have, and whether you want a low-manipulation or statement look. Add saved looks in Styles and I can reference them here.";
+  }
+  if (/time|hour|long|estimate|duration|weekend|tonight/.test(q)) {
+    return "Real talk, babe: a style estimate should include detangling, sectioning, installation, drying, and finishing — not only the hands-on styling. For now, your planner’s duration fields are editable. Tell me which style you mean and I’ll help you break the time into stages.";
+  }
+  return "Okay, babe, let’s make a plan that works for your actual life — not a fantasy 3-hour wash day that somehow takes 7 😅. I can look at your saved styles, shopping list, and Crown Planner tasks in this preview. What look are we working on, and how much time do you have?";
+}
+function viewSasha() {
+  const log = sashaMessages.map(m => '<div class="sasha-bubble '+(m.role === 'user' ? 'user' : '')+'">'+esc(m.text)+'</div>').join('');
+  return '<section class="card hero goldline"><div class="sasha-hero"><div class="sasha-avatar" aria-label="Sasha avatar">👩🏾‍🦱</div><div><div class="eyebrow">YOUR HAIR BESTIE ✦</div><h2 class="script" style="margin:4px 0">Sasha 💋</h2><p class="muted" style="margin:0">Mocha glow. Golden energy. Natural-hair know-how.</p></div></div></section>'
+  + '<section class="card"><div class="sec-title"><h3>Talk to Sasha</h3><span class="chip gold">Preview</span></div><p class="muted">A first look at Sasha. This version is an interactive demo, not yet connected to a live AI model.</p><div class="sasha-chatlog" id="sashaLog" aria-live="polite">'+log+'</div>'
+  + '<div class="sasha-prompts"><button class="tmpl" data-act="sasha-prompt" data-text="Help me choose a hairstyle">💇🏾 Choose a look</button><button class="tmpl" data-act="sasha-prompt" data-text="What supplies am I missing?">🛍️ Shopping list</button><button class="tmpl" data-act="sasha-prompt" data-text="Help me plan wash day">🫧 Wash day</button><button class="tmpl" data-act="sasha-prompt" data-text="What is on my schedule?">🗓️ My schedule</button></div>'
+  + '<form data-form="sasha-chat"><div class="sasha-compose"><textarea name="message" rows="2" placeholder="Tell Sasha what you’re planning…" required aria-label="Message Sasha"></textarea><button class="btn gold" style="min-height:48px">Send ✦</button></div></form></section>';
+}
+function sendSashaMessage(message) {
+  const text = String(message || '').trim();
+  if (!text) return;
+  sashaMessages.push({role:'user',text});
+  sashaMessages.push({role:'sasha',text:sashaReply(text)});
+  if (sashaMessages.length > 18) sashaMessages = [sashaMessages[0], ...sashaMessages.slice(-16)];
+  render();
+  const log = $('#sashaLog');
+  if (log) log.scrollTop = log.scrollHeight;
 }
 
 function viewStyles() {
@@ -932,6 +1005,7 @@ function addMissingToList(s) {
 const ACT = {
   'tab': el => { ui.tab = el.dataset.id; ui.styleId = null; render(); go(); },
   'open-style': el => { ui.styleId = el.dataset.id; render(); go(); },
+  'sasha-prompt': el => sendSashaMessage(el.dataset.text),
   'back-styles': () => { ui.styleId = null; render(); go(); },
   'new-style': () => openSheet(styleForm()),
   'edit-style': el => openSheet(styleForm(getStyle(el.dataset.id))),
@@ -1038,6 +1112,7 @@ const ACT = {
 };
 
 const FORMS = {
+  'sasha-chat': (f, fd) => { const input = f.querySelector('[name=message]'); const message = fd.get('message'); sendSashaMessage(message); },
   'style': (f, fd) => {
     const name = fd.get('name').trim(); if (!name) return;
     let s = getStyle(f.dataset.id);
