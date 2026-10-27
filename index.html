@@ -850,8 +850,8 @@ function viewStyles() {
   const classify = name => {
     const n = name.toLowerCase();
     if (/wash|shampoo|condition|blow.?dry|wash.?and.?go/.test(n)) return 'Wash Day';
-    if (/braid|loc|cornrow|knotless|crochet|faux|added hair|sew.?in|wig/.test(n)) return 'Protective';
-    if (/twist|afro|puff|curl|bantu|flexi|rod|flat twist/.test(n)) return 'Natural';
+    if (/twist|braid|loc|cornrow|knotless|crochet|faux|added hair|sew.?in|wig/.test(n)) return 'Protective';
+    if (/afro|puff|curl|bantu|flexi|rod/.test(n)) return 'Natural';
     return 'Other';
   };
   const filters = ['All', 'Protective', 'Natural', 'Wash Day', 'Other'];
