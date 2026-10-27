@@ -371,6 +371,34 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
 .detail-stats strong{font-size:13px;color:#51271f}
 @media(max-width:380px){.style-detail-photo{height:270px}.style-detail-copy{padding:16px}.style-detail-copy h2{font-size:26px}}
 
+
+/* Full reference-style library and planning polish */
+.style-library-head{padding:8px 4px 6px}
+.style-library-head h2{font-family:Georgia,'Times New Roman',serif;font-size:30px;line-height:1.15;font-weight:500;margin:6px 0;color:#51271f;letter-spacing:-.045em}
+.style-library-head p{margin:0;color:#876d64;font-size:14px;line-height:1.45}
+.style-search{display:flex;align-items:center;gap:10px;margin:14px 0 10px;background:rgba(255,250,247,.96);border:1px solid white;border-radius:999px;padding:0 14px;box-shadow:0 4px 15px rgba(74,38,30,.05)}
+.style-search .search-mark{font-size:23px;color:#876d64}
+.style-search input{flex:1;min-width:0;border:0!important;box-shadow:none!important;background:transparent!important;border-radius:999px!important;padding:13px 0!important;min-height:44px}
+.style-filter-row{display:flex;gap:7px;overflow-x:auto;padding:3px 0 12px;scrollbar-width:none}
+.style-filter-row::-webkit-scrollbar{display:none}
+.style-filter-row button{white-space:nowrap;border-radius:999px;padding:9px 14px;background:#fffaf7;border:1px solid #ead8d0;font-size:12px;font-weight:700;color:#654036}
+.style-filter-row button.selected{background:#55261f;color:#fff;border-color:#55261f}
+.library-title-row{display:flex;justify-content:space-between;align-items:center;margin:2px 2px 8px;font-size:12px;color:#876d64;font-weight:700}
+.style-grid{gap:10px;margin:8px 0 16px}
+.style-card{border-radius:17px;overflow:hidden}
+.cover{aspect-ratio:4/4.5;background:#ead9ce}
+.sc-body{padding:10px 10px 12px}
+.sc-name{font-size:15px}
+.sc-meta{font-size:10px}
+.style-detail-photo{height:340px}
+.style-detail-copy{padding:19px}
+.style-detail-copy .btn{margin-top:2px}
+.sheet form[data-form="wizard"] .sheet-head h3{font-family:Georgia,'Times New Roman',serif;color:#51271f}
+.sheet form[data-form="wizard"] .eyebrow{margin-top:16px}
+.sheet form[data-form="wizard"] .hint{background:#f8ede5;border-radius:12px;padding:10px 12px;line-height:1.45}
+.sheet form[data-form="wizard"] .sheet-actions{position:sticky;bottom:0;background:#fffaf7;padding:10px 0 2px}
+@media(max-width:380px){.style-library-head h2{font-size:27px}.style-grid{gap:8px}.sc-name{font-size:13px}.style-detail-photo{height:275px}}
+
 </style>
 </head>
 <body>
@@ -483,7 +511,7 @@ function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) { toast('Storage is full — export a backup in Settings 💾'); }
 }
-const ui = { tab: 'styles', styleId: null, month: today().slice(0, 7), day: today() };
+const ui = { tab: 'styles', styleId: null, month: today().slice(0, 7), day: today(), styleQuery: '', styleFilter: 'All' };
 const getStyle = id => S.styles.find(s => s.id === id);
 const getTask = id => S.tasks.find(t => t.id === id);
 
@@ -698,34 +726,46 @@ function render() {
 }
 
 function viewStyles() {
-  const cards = S.styles.map(s => {
+  const classify = name => {
+    const n = name.toLowerCase();
+    if (/wash|shampoo|condition|blow.?dry|wash.?and.?go/.test(n)) return 'Wash Day';
+    if (/braid|loc|cornrow|knotless|crochet|faux|added hair|sew.?in|wig/.test(n)) return 'Protective';
+    if (/twist|afro|puff|curl|bantu|flexi|rod|flat twist/.test(n)) return 'Natural';
+    return 'Other';
+  };
+  const photoByStyle = name => {
+    const n = name.toLowerCase();
+    if (/wash|twist out|wash.?and.?go|natural curl|afro|puff|bantu|flexi|rod/.test(n))
+      return 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=700&q=82';
+    if (/braid|loc|cornrow|knotless|added hair|flat twist|box twist|faux|crochet|wig/.test(n))
+      return 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=700&q=82';
+    return '';
+  };
+  const filters = ['All', 'Protective', 'Natural', 'Wash Day', 'Other'];
+  const q = (ui.styleQuery || '').trim().toLowerCase();
+  const visible = S.styles.filter(s => (!q || s.name.toLowerCase().includes(q) || (s.notes || '').toLowerCase().includes(q)) &&
+    (ui.styleFilter === 'All' || classify(s.name) === ui.styleFilter));
+  const cards = visible.map(s => {
     const have = s.items.filter(i => i.have).length;
     const nx = nextForStyle(s.id);
-    const photoByStyle = name => {
-      const n = name.toLowerCase();
-      // Unsplash-hosted, free-to-use reference photos; user-added inspiration photos take priority.
-      if (/wash|twist out|wash.?and.?go|natural curl|afro|puff/.test(n))
-        return 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=700&q=82';
-      if (/braid|loc|cornrow|knotless|added hair|flat twist|box twist|faux/.test(n))
-        return 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=700&q=82';
-      return '';
-    };
-    const cover = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="Your hairstyle inspiration">` :
-      photoByStyle(s.name) ? `<img src="${photoByStyle(s.name)}" alt="${esc(s.name)} hairstyle reference" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` :
+    const photo = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="Your hairstyle inspiration">` :
+      photoByStyle(s.name) ? `<img src="${photoByStyle(s.name)}" alt="${esc(s.name)} hairstyle reference" loading="lazy" onerror="this.style.display='none'">` :
       `<span class="cover-emoji">${esc(s.emoji || '💫')}</span>`;
     return `<button class="style-card" data-act="open-style" data-id="${s.id}">
-      <div class="cover">${cover}</div>
+      <div class="cover">${photo}</div>
       <div class="sc-body"><div class="sc-name">${esc(s.name)}</div>
       <div class="sc-meta">${have}/${s.items.length} ready · ${nx ? 'next ' + fmtDate(nx, { month: 'short', day: 'numeric' }) : 'not planned'}</div></div>
     </button>`;
   }).join('');
-  return `<section class="card hero goldline">
-      <div class="eyebrow">✦ my looks ✦</div>
-      <h2 class="script">Hairstyle Library</h2>
-      <p class="muted">Find your next look. Save inspiration, prep your products, and plan your styling days.</p>
-      <button class="btn gold" data-act="new-style">＋ New style</button>
-    </section>
-    ${cards ? `<div class="style-grid">${cards}</div>` : '<p class="empty">No styles yet. Add your first look ✨</p>'}`;
+  return `<div class="style-library-head">
+      <div class="eyebrow">✦ YOUR LOOKBOOK ✦</div>
+      <h2>Hairstyle Library</h2>
+      <p>Find your next look, save inspiration, and plan your styling days.</p>
+    </div>
+    <div class="style-search"><span class="search-mark">⌕</span><input data-style-search type="search" placeholder="Search hairstyles…" value="${esc(ui.styleQuery || '')}" aria-label="Search hairstyles"><span style="color:#876d64">☷</span></div>
+    <div class="style-filter-row">${filters.map(f => `<button type="button" data-act="style-filter" data-filter="${f}" class="${ui.styleFilter === f ? 'selected' : ''}">${f}</button>`).join('')}</div>
+    <div class="library-title-row"><span>${visible.length} ${visible.length === 1 ? 'style' : 'styles'}</span><button class="btn gold sm" data-act="new-style">＋ Add style</button></div>
+    ${cards ? `<div class="style-grid">${cards}</div>` : '<p class="empty">No styles match. Try another search or category.</p>'}`;
 }
 
 function viewStyle(s) {
@@ -1394,6 +1434,20 @@ document.addEventListener('click', e => {
   if (e.target.id === 'sheet') return closeSheet();
   const el = e.target.closest('[data-act]'); if (!el) return;
   const fn = ACT[el.dataset.act]; if (fn) { e.preventDefault(); fn(el, e); }
+});
+document.addEventListener('input', e => {
+  const el = e.target.closest('[data-style-search]');
+  if (!el) return;
+  const pos = el.selectionStart;
+  ui.styleQuery = el.value;
+  const view = $('#view');
+  const active = document.activeElement;
+  const next = viewStyles();
+  // Replace only the library content while preserving keyboard focus and cursor.
+  view.innerHTML = next;
+  const input = view.querySelector('[data-style-search]');
+  if (input) { input.focus(); input.setSelectionRange(pos, pos); }
+  hydrate();
 });
 document.addEventListener('submit', e => {
   const f = e.target; const fn = FORMS[f.dataset.form];
