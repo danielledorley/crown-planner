@@ -781,13 +781,18 @@ function viewStyles() {
     if (/twist|afro|puff|curl|bantu|flexi|rod|flat twist/.test(n)) return 'Natural';
     return 'Other';
   };
-  const photoByStyle = name => {
+  const photoByStyle = (name, width = 700) => {
     const n = name.toLowerCase();
-    if (/wash|twist out|wash.?and.?go|natural curl|afro|puff|bantu|flexi|rod/.test(n))
-      return 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=700&q=82';
-    if (/braid|loc|cornrow|knotless|added hair|flat twist|box twist|faux|crochet|wig/.test(n))
-      return 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=700&q=82';
-    return '';
+    const photos = [
+      [/box braid|knotless|twists with added hair/i, 'https://images.pexels.com/photos/13767165/pexels-photo-13767165.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/cornrow/i, 'https://images.pexels.com/photos/5672900/pexels-photo-5672900.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/loc|dread/i, 'https://images.pexels.com/photos/11617524/pexels-photo-11617524.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/twist|flat twist/i, 'https://images.pexels.com/photos/7951589/pexels-photo-7951589.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/wash|twist out|wash.?and.?go|natural curl|afro|puff|bantu|flexi|rod/i, 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/braid/i, 'https://images.pexels.com/photos/5722771/pexels-photo-5722771.jpeg?auto=compress&cs=tinysrgb&w=' + width]
+    ];
+    const match = photos.find(([pattern]) => pattern.test(n));
+    return match ? match[1] : '';
   };
   const filters = ['All', 'Protective', 'Natural', 'Wash Day', 'Other'];
   const q = (ui.styleQuery || '').trim().toLowerCase();
@@ -842,7 +847,7 @@ function viewStyle(s) {
     <section class="style-detail-hero">
       <div class="style-detail-photo">
         ${s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="${esc(s.name)} inspiration">` :
-          `<img src="${(/loc|braid|cornrow|knotless|added hair|faux/i.test(s.name) ? 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=1100&q=88' : 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=1100&q=88')}" alt="${esc(s.name)} hairstyle reference" loading="lazy" onerror="this.style.display='none'">`}
+          `<img src="${photoByStyle(s.name, 1100) || 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=1100'}" alt="${esc(s.name)} hairstyle reference" loading="lazy" onerror="this.style.display='none'">`}
         <button class="photo-back" data-act="back-styles" aria-label="Back to hairstyles">‹</button>
         <button class="photo-fav" data-act="edit-style" data-id="${s.id}" aria-label="Edit hairstyle">♡</button>
       </div>
