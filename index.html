@@ -472,6 +472,10 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
 .sasha-avatar.sasha-portrait-missing .sasha-avatar-face{display:block}
 .sasha-avatar .sasha-avatar-spark{z-index:2;right:-5px;top:-8px}
 
+
+nav.tabs .tab-crown{display:flex;align-items:center;justify-content:center;width:24px;height:24px;margin:0 auto 3px}
+nav.tabs .tab-crown img{display:block;width:24px;height:24px;object-fit:contain}
+
 </style>
 </head>
 <body>
@@ -484,7 +488,7 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
   <main id="view"></main>
 </div>
 <nav class="tabs" aria-label="Sections">
-  <button data-act="tab" data-id="styles"><b>👑</b>Styles</button>
+  <button data-act="tab" data-id="styles"><b class="tab-crown"><img src="icon.svg?v=3" alt="" aria-hidden="true"></b>Styles</button>
   <button data-act="tab" data-id="list"><b>🛍️</b>List</button>
   <button data-act="tab" data-id="plan"><b>🗓️</b>Planner</button>
   <button data-act="tab" data-id="sasha"><b>💋</b>Sasha</button>
