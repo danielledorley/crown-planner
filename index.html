@@ -271,6 +271,78 @@ code{background:rgba(255,255,255,.85);padding:1px 6px;border-radius:6px;font-siz
   padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;color:#4a3606;max-width:calc(100% - 32px);text-align:center;
   background:linear-gradient(180deg,#fff7d6,#f0d67d);box-shadow:0 10px 24px rgba(159,122,26,.3);transition:all .25s}
 #toast.show{opacity:1;transform:translateX(-50%)}
+
+/* ---------- Crown Planner elevated editorial redesign ---------- */
+:root{
+  --ink:#3b211e;--ink-soft:#8b6f68;--line:#ead8d0;
+  --sea1:#fbf5f1;--sea2:#f3e4dc;--sea3:#e7c7b8;--sea4:#a66c59;--sea5:#6a3027;
+  --gold:#b98242;--gold-dk:#85562b;--gold-lt:#f0d9b8;
+  --lilac:#f3e8e5;--blush:#f7e8e3;
+  --glass:rgba(255,250,247,.94);--glass-brd:rgba(255,255,255,.98);
+  --gold-grad:linear-gradient(120deg,#75412f 0%,#c58d59 45%,#f0d9b8 72%,#a76c43 100%);
+  --sea-grad:linear-gradient(180deg,#71382d 0%,#55261f 100%);
+  --holo:linear-gradient(110deg,#f4e1d8,#f8eee8,#ead4c8);
+  --radius:20px;--shadow:0 7px 24px rgba(73,40,32,.09);
+}
+body{
+  background:linear-gradient(180deg,#fbf4ef 0%,#f7eee8 55%,#f3e6df 100%);
+  color:var(--ink);background-attachment:scroll;
+}
+.sparkles{display:none}
+header.top{padding:calc(22px + env(safe-area-inset-top)) 0 12px}
+.logo{font-family:Georgia,'Times New Roman',serif;font-size:42px;letter-spacing:-.055em;background:none;color:#4d241e;filter:none;animation:none}
+.tag{letter-spacing:.19em;color:#9a6957;font-size:10px}
+.script,.cal-head h3{font-family:Georgia,'Times New Roman',serif;color:#56291f;background:none;filter:none}
+.script{font-size:34px}
+.eyebrow{letter-spacing:.2em;color:#9a6957}
+.card{background:rgba(255,251,248,.96);border:1px solid #fff;box-shadow:0 8px 25px rgba(74,38,30,.07);backdrop-filter:none;-webkit-backdrop-filter:none;border-radius:22px}
+.goldline::before{display:none}
+.hero{text-align:left;padding:22px}
+.hero::after{content:"✦";color:#b98242}
+.hero .eyebrow{color:#a06e56}
+.btn{border-radius:14px;background:#5a2b23;box-shadow:none;text-shadow:none;border:1px solid #5a2b23;font-weight:700}
+.btn::before{display:none}
+.btn.gold{background:#b98242;color:#fff;border-color:#b98242;text-shadow:none;box-shadow:none}
+.btn.ghost{background:#fffaf7;color:#5a2b23;border-color:#e7d1c7}
+.btn:active{transform:scale(.985)}
+.chip{background:#f5e7df;border:1px solid #ead7cc;color:#6b4035}
+.chip.gold{background:#f6e5c9;color:#774b2a;border-color:#ead2a9}
+.tmpl{background:#fffaf7;border-color:#ead8d0;box-shadow:none}
+.style-grid{gap:12px;margin:16px 0}
+.style-card{background:#fffaf7;border:1px solid #fff;border-radius:17px;box-shadow:0 5px 18px rgba(73,40,32,.09);backdrop-filter:none;-webkit-backdrop-filter:none}
+.cover{aspect-ratio:4/4.6;background:#ead9ce}
+.cover img{object-fit:cover;transition:transform .35s}
+.style-card:active .cover img{transform:scale(1.03)}
+.cover::after{background:linear-gradient(180deg,rgba(35,16,12,0) 50%,rgba(35,16,12,.12) 100%)}
+.cover-emoji{font-size:48px}
+.sc-body{padding:11px 11px 13px}
+.sc-name{font-family:Georgia,'Times New Roman',serif;font-size:16px;letter-spacing:-.02em;color:#49241e}
+.sc-meta{color:#9a776b;font-size:11px}
+.detail-hero .big-emoji{font-size:38px}
+.detail-top .back{color:#71382d}
+.sec-title h3{color:#71382d;letter-spacing:.09em}
+.sec-title h3::before{color:#b98242}
+.fld>span{color:#8b5a49}
+input[type=text],input[type=url],input[type=date],input[type=time],input[type=number],input:not([type]),select,textarea{border-color:#ead8d0;background:#fffaf7;box-shadow:none;border-radius:13px;color:#3b211e}
+input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3px rgba(185,130,66,.15)}
+.item,.task{border-bottom-color:#edddd5}
+.check{border-color:#b98242;box-shadow:none}
+.check.on{background:#b98242;border-color:#b98242;box-shadow:none}
+.check.on::after{color:white}
+.tabs{background:rgba(255,250,247,.97)!important;border:1px solid #ead8d0!important;box-shadow:0 6px 25px rgba(73,40,32,.12)!important;backdrop-filter:blur(16px)!important}
+.tabs button{color:#9b7b70}
+.tabs button.active{color:#fff;background:#5a2b23;box-shadow:none}
+.tabs button b{font-size:20px}
+.sasha-hero{background:linear-gradient(125deg,#fffaf7,#f2e1d8,#f3e7d4)}
+.sasha-avatar{border-color:#c79a58}
+.sasha-title{color:#5a2b23}
+.status{background:#fffaf7;border-color:#ead8d0}
+.day{background:rgba(255,250,247,.8)}
+.day.today{border-color:#b98242;background:#f6e5c9}
+.day.sel{background:#5a2b23;box-shadow:none}
+.dots i{background:#b98242}
+@media(max-width:380px){.logo{font-size:37px}.style-grid{gap:9px}.sc-name{font-size:14px}.sc-body{padding:9px}}
+
 </style>
 </head>
 <body>
@@ -621,8 +693,8 @@ function viewStyles() {
   }).join('');
   return `<section class="card hero goldline">
       <div class="eyebrow">✦ my looks ✦</div>
-      <h2 class="script">Style Recipes</h2>
-      <p class="muted">Every look with its products, tools, steps, inspo pics and tutorials.</p>
+      <h2 class="script">Hairstyle Library</h2>
+      <p class="muted">Find your next look. Save inspiration, prep your products, and plan your styling days.</p>
       <button class="btn gold" data-act="new-style">＋ New style</button>
     </section>
     ${cards ? `<div class="style-grid">${cards}</div>` : '<p class="empty">No styles yet. Add your first look ✨</p>'}`;
