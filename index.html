@@ -1382,6 +1382,20 @@ const ACT = {
     fr.innerHTML = `<iframe src="${esc(fr.dataset.embed)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; clipboard-write" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="Video"></iframe>`;
   },
   'del-video': el => { const s = getStyle(el.dataset.sid); s.videos = s.videos.filter(v => v.id !== el.dataset.id); save(); render(); },
+  'number-step': el => {
+    const form = el.closest('form');
+    const input = form && form.querySelector(`[name="${el.dataset.target}"]`);
+    if (!input) return;
+    const min = Number.isFinite(Number(input.min)) && input.min !== '' ? Number(input.min) : -Infinity;
+    const max = Number.isFinite(Number(input.max)) && input.max !== '' ? Number(input.max) : Infinity;
+    const step = Number(input.step) > 0 ? Number(input.step) : 1;
+    const current = Number(input.value || input.defaultValue || min || 0);
+    const delta = Number(el.dataset.step) || 0;
+    const next = Math.max(min, Math.min(max, current + delta * step));
+    input.value = String(next);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  },
   'plan-style': el => openSheet(wizardForm(getStyle(el.dataset.id))),
   'sasha-prompt': el => sendSasha(el.dataset.prompt),
   'add-task': el => openSheet(taskForm(null, { date: ui.tab === 'plan' ? ui.day : today(), styleId: el.dataset.style || '' })),
