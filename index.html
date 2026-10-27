@@ -1191,7 +1191,7 @@ function wizardForm(s) {
   const def = addDays(today(), 7);
   const added = /added|braid|loc|crochet|wig|sew/i.test(s.name);
   const photo = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="">` :
-    `<img src="${(/loc|braid|cornrow|knotless|added hair|faux/i.test(s.name) ? 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=700&q=82' : 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=700&q=82')}" alt="" onerror="this.style.display='none'">`;
+     `<img src="${photoByStyle(s.name, 700) || 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=700'}" alt="" onerror="this.style.display='none'">`;
   const sel = (n, list, d) => `<select name="${n}">${list.map(([v, l]) => `<option value="${v}" ${String(v) === String(d) ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
   const hrs = [1, 2, 3, 4, 5, 6, 7, 8, 10].map(h => [h, `${h} hr${h > 1 ? 's' : ''}`]);
   const ck = (n, label, sub, on = false) => `<label class="switch"><input type="checkbox" name="${n}" ${on ? 'checked' : ''}><span class="track"></span><span>${label}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${sub}</span></span></label>`;
