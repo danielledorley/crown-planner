@@ -323,7 +323,7 @@ const REPEATS = {
 const REMINDERS = [[-1, 'Google default'], [0, 'No reminder'], [30, '30 min before'], [60, '1 hour before'], [1440, '1 day before'], [2880, '2 days before']];
 const DURS = [15, 30, 45, 60, 90, 120, 180, 240, 300, 360, 480, 600];
 const TEMPLATES = [['🫧', 'Wash day', 240], ['🌿', 'Pre-poo', 30], ['💧', 'Deep condition', 45], ['♨️', 'Steam treatment', 30], ['💨', 'RevAir stretch', 60], ['🌀', 'Twist day', 180], ['✨', 'Refresh edges', 30], ['🪮', 'Take down', 120], ['✂️', 'Trim', 60], ['🛍️', 'Supply run', 60]];
-const EMOJIS = ['🌀', '💫', '✨', '👑', '🫧', '🦋', '🌸', '💎', '🎀', '🐚', '🌊', '💖', '🪩', '🌺', '⭐', '🍯'];
+const EMOJIS = ['💦', '🧴', '🧼', '🪮', '🌀', '✨', '🪢', '🧶', '👑', '🫧', '🦋', '🌸', '💎', '🎀', '🌊', '💖', '🪩', '🌺', '⭐', '🍯', '🪄', '🌷', '🪷', '💐'];
 const WASH_STEPS = [
   'Pre-poo and finger detangle',
   'Shampoo',
@@ -343,17 +343,17 @@ function seed() {
   const myTools = [['RevAir', 'tool'], ['GLO Heat Cap', 'tool'], ['Hair steamer', 'tool'], ['GLO detangling brush', 'tool'], ['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Blow dryer', 'tool'], ['Flat iron', 'tool'], ['Crochet hook', 'tool']];
   const lco = [['Leave-in / liquid', 'product'], ['Oil', 'product'], ['Cream', 'product']];
   s.styles.push(
-    { id: uid(), name: 'Wash Day Reset', emoji: '🫧', notes: 'My full wash day. Always heat protectant before the RevAir.',
+    { id: uid(), name: 'Wash Day Reset', emoji: '💦', notes: 'My full wash day. Always heat protectant before the RevAir.',
       items: [...it([['Pre-poo', 'product'], ['Shampoo', 'product'], ['Deep conditioner', 'product'], ['Rinse-out conditioner', 'product'], ['Leave-in conditioner', 'product'], ['Heat protectant', 'product']]),
               ...it(myTools.slice(0, 6), true)],
       steps: st(WASH_STEPS), inspo: [], videos: [] },
-    { id: uid(), name: 'Twist Out', emoji: '🌀', notes: 'Loose natural style. LCO plus styling gel.',
+    { id: uid(), name: 'Twist Out', emoji: '✨', notes: 'Loose natural style. LCO plus styling gel.',
       items: [...it([...lco, ['Styling gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Styling gel', 'Two-strand twist', 'Let dry fully', 'Unravel and fluff']), inspo: [], videos: [] },
-    { id: uid(), name: 'Two-Strand Twists', emoji: '💫', notes: 'Protective style. LCO plus edge gel. Wear 2–4 weeks.',
+    { id: uid(), name: 'Two-Strand Twists', emoji: '🪢', notes: 'Protective style. LCO plus edge gel. Wear 2–4 weeks.',
       items: [...it([...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Two-strand twist', 'Lay edges with edge gel']), inspo: [], videos: [] },
-    { id: uid(), name: 'Twists with Added Hair', emoji: '👑', notes: 'Style the day after wash day or a few days later. Wear 2–4 weeks.',
+    { id: uid(), name: 'Twists with Added Hair', emoji: '🧶', notes: 'Style the day after wash day or a few days later. Wear 2–4 weeks.',
       items: [...it([['Added hair', 'material'], ...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Crochet hook', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Prep and section the added hair', 'Section', 'LCO: liquid, oil, cream', 'Twist with added hair', 'Finish the ends', 'Lay edges with edge gel']), inspo: [], videos: [] }
   );
@@ -368,6 +368,17 @@ function load() {
   return seed();
 }
 let S = load();
+// Refresh the starter-style icons for existing users, while preserving any icon they customized.
+const starterIcons = {
+  'Wash Day Reset': ['🫧', '💦'],
+  'Twist Out': ['🌀', '✨'],
+  'Two-Strand Twists': ['💫', '🪢'],
+  'Twists with Added Hair': ['👑', '🧶']
+};
+for (const style of S.styles) {
+  const match = starterIcons[style.name];
+  if (match && match.includes(style.emoji)) style.emoji = match[1];
+}
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) { toast('Storage is full — export a backup in Settings 💾'); }
