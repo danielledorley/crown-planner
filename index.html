@@ -986,8 +986,10 @@ function wizardForm(s) {
     </div>
     <div class="row2">
       <label class="fld"><span>Styling takes</span>${sel('hours', hrs, added ? 6 : 2)}</label>
-      <label class="fld"><span>Wear it for</span>${sel('weeks', [0, 1, 2, 3, 4, 5, 6, 8].map(w => [w, w ? w + ' week' + (w > 1 ? 's' : '') : 'Not sure']), 3)}</label>
+      <label class="fld"><span>How long will you wear it?</span><input name="wearLength" type="number" min="1" max="365" step="1" value="3" required></label>
     </div>
+    <label class="fld"><span>Wear-time units</span>${sel('wearUnit', [['days','Days'],['weeks','Weeks'],['months','Months']], 'weeks')}</label>
+    <p class="hint">Choose any number of days, weeks, or months. Crown Planner will schedule your refresh and take-down around this duration.</p>
     <div class="eyebrow" style="margin-top:12px">Add these to my planner</div>
     ${ck('shop', 'Supply run 🛍️', '3 days before wash day, with your missing items')}
     ${ck('wash', 'Wash day 🫧', 'With your wash routine steps in the notes')}
@@ -1185,7 +1187,10 @@ const FORMS = {
   },
   'wizard': (f, fd) => {
     const s = getStyle(f.dataset.id); const date = fd.get('date'); if (!s || !date) return;
-    const weeks = +fd.get('weeks') || 0, sync = fd.get('sync') === 'on';
+    const wearLength = Math.max(1, Math.min(365, +fd.get('wearLength') || 3));
+    const wearUnit = fd.get('wearUnit') || 'weeks';
+    const wearDays = wearLength * (wearUnit === 'days' ? 1 : wearUnit === 'months' ? 30 : 7);
+    const sync = fd.get('sync') === 'on';
     const styleDay = addDays(date, +fd.get('styleOffset') || 0);
     const ws = getStyle(fd.get('washStyle'));
     const list = x => x.steps.map((st, i) => `${i + 1}. ${st.text}`).join('\n');
@@ -1196,8 +1201,8 @@ const FORMS = {
     if (fd.get('shop') === 'on') out.push(mk({ title: `Supply run for ${s.name} 🛍️`, date: addDays(date, -3), allDay: true, reminder: -1, notes: missing ? 'Still need:\n' + missing : 'You have everything 💖' }));
     if (fd.get('wash') === 'on') out.push(mk({ title: `Wash day for ${s.name} 🫧`, date, time: fd.get('washTime') || '09:00', duration: (+fd.get('washHours') || 4) * 60, notes: ws && ws.steps.length ? list(ws) : '' }));
     if (fd.get('install') === 'on') out.push(mk({ title: `${s.name} style day 🌀`, date: styleDay, time: fd.get('time') || '10:00', duration: (+fd.get('hours') || 2) * 60, notes: list(s) }));
-    if (weeks >= 2 && fd.get('refresh') === 'on') out.push(mk({ title: `${s.name} refresh ✨`, date: addDays(styleDay, Math.round(weeks * 7 / 2)), allDay: true, reminder: -1, notes: 'Edges, scalp care, re-twist as needed.' }));
-    if (weeks > 0 && fd.get('takedown') === 'on') out.push(mk({ title: `Take down ${s.name} 🪮`, date: addDays(styleDay, weeks * 7), duration: 120, notes: 'Take down gently, then plan the next wash day.' }));
+    if (wearDays >= 2 && fd.get('refresh') === 'on') out.push(mk({ title: `${s.name} refresh ✨`, date: addDays(styleDay, Math.max(1, Math.round(wearDays / 2))), allDay: true, reminder: -1, notes: 'Edges, scalp care, re-twist as needed.' }));
+    if (fd.get('takedown') === 'on') out.push(mk({ title: `Take down ${s.name} 🪮`, date: addDays(styleDay, wearDays), duration: 120, notes: 'Take down gently, then plan the next wash day.' }));
     if (!out.length) return toast('Pick at least one thing to add');
     S.tasks.push(...out); save(); closeSheet(); render();
     toast(`${out.length} tasks planned ✨`);
