@@ -779,6 +779,9 @@ function render() {
 function photoByStyle(name) {
   const n = name.toLowerCase();
   const photos = [
+    [/wash day|wash.?day|towel wrap|microfiber/i, 'wash-day.jpg'],
+    [/bantu/i, 'bantu-knots.jpg'],
+    [/flexi rod|flexi rods/i, 'flexi-rods.jpg'],
     [/wash and go|wash.?and.?go|natural curl|afro|puff/i, 'wash-and-go.jpg'],
     [/twist out/i, 'twist-out.jpg'],
     [/knotless/i, 'knotless-braids.jpg'],
