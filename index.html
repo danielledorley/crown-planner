@@ -431,6 +431,33 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
 .afro-index-link small{display:block;font-size:11px;line-height:1.4;color:#876d64;margin-top:3px}
 .detail-reference-link{display:inline-flex;color:#8a573d;font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid #d7b39a;padding-bottom:3px;margin:0 0 12px}
 
+
+/* Sasha's warm editorial dashboard */
+.sasha-hero{grid-template-columns:92px 1fr;background:linear-gradient(125deg,#fff8f0,#f0d8c9,#f3e6d5);border-color:#e7c8ad}
+.sasha-avatar{width:86px;height:86px;background:radial-gradient(circle at 40% 24%,#a96543,#4b211a 78%);border:3px solid #d6ad70;display:grid;place-items:center;overflow:visible}
+.sasha-avatar-face{font-size:52px;filter:drop-shadow(0 3px 2px #31150e)}
+.sasha-avatar-spark{position:absolute;right:-5px;top:-8px;color:#c58c4c;font-size:22px}
+.sasha-title{font-family:Georgia,serif;font-weight:600;color:#4b211a}
+.sasha-sub{color:#9a5a3c}
+.sasha-dashboard{background:linear-gradient(180deg,#fffaf5,#fbf0e6)}
+.sasha-welcome{padding:15px 16px;border:1px solid #f0dccc;background:#fff7ef;border-radius:18px;color:#4b2a20;line-height:1.5}
+.sasha-welcome p{margin:5px 0 0;font-size:13px}
+.sasha-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 18px}
+.sasha-stats>div{background:#f7e7d8;border:1px solid #f0dac7;border-radius:14px;padding:11px 7px;text-align:center}
+.sasha-stats strong{display:block;font-size:22px;color:#6c3022}
+.sasha-stats span{font-size:10px;color:#876657}
+.sasha-section-heading{font-size:15px;color:#4b211a;margin:16px 0 10px}
+.sasha-tools{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.sasha-tools button{display:grid;grid-template-columns:30px 1fr;column-gap:8px;align-items:center;text-align:left;padding:12px;border:1px solid #efd9c8;border-radius:15px;background:linear-gradient(145deg,#fffaf5,#f8e9dc);color:#4b211a;min-width:0}
+.sasha-tools button>span{grid-row:span 2;font-size:23px}
+.sasha-tools button b{font-size:12px}
+.sasha-tools button small{font-size:10px;color:#967364;margin-top:3px}
+.sasha-prompts button{border-color:#e7c6ac;background:#fff9f3;color:#70402e}
+.sasha-msg.bot{background:#fffaf6;border-color:#efdccc}
+.sasha-msg.user{background:#f1d8c6;border-color:#e7c3a9}
+.sasha-compose{border-top-color:#efdccc}
+@media(max-width:390px){.sasha-hero{grid-template-columns:72px 1fr}.sasha-avatar{width:66px;height:66px}.sasha-avatar-face{font-size:40px}.sasha-tools{grid-template-columns:1fr}.sasha-stats span{font-size:9px}}
+
 </style>
 </head>
 <body>
@@ -1042,63 +1069,83 @@ function viewPlan() {
 function viewSasha() {
   const savedLooks = S.styles.length;
   const upcoming = S.tasks.filter(t => { const d = nextOcc(t); return d && d <= addDays(today(), 21); }).length;
+  const missingCount = S.styles.reduce((n, st) => n + st.items.filter(i => !i.have).length, 0);
+  const wash = S.styles.find(st => /wash day/i.test(st.name));
+  const goals = S.settings.sashaGoals || [];
   return `<section class="card sasha-hero goldline">
-      <div class="sasha-avatar" aria-label="Sasha, a mocha-skinned natural hair stylist">👩🏾‍🦱</div>
-      <div><div class="eyebrow">Your natural-hair bestie</div><h2 class="sasha-title">Sasha 💋</h2><div class="sasha-sub">Mocha glow · Crown confidence</div>
-      <p class="muted" style="margin:6px 0 0">Cute styles, realistic timelines, and a plan that respects your real life.</p></div>
+      <div class="sasha-avatar" aria-label="Sasha, natural hair assistant"><span class="sasha-avatar-face">👩🏾‍🦱</span><span class="sasha-avatar-spark">✦</span></div>
+      <div><div class="eyebrow">Your natural-hair bestie</div><h2 class="sasha-title">Sasha <span>✦</span></h2><div class="sasha-sub">Your hair-care assistant</div>
+      <p class="muted" style="margin:6px 0 0">Cute styles, realistic routines, and a plan that respects your real life.</p></div>
     </section>
-    <section class="card">
-      <div class="sasha-chat" id="sashaChat" aria-live="polite">
-        <div class="sasha-msg bot">Hey, gorgeous. 💋 I’m Sasha—your natural-hair girl. I know wash day can turn into a whole shift, so we’re planning for the actual time, not fantasy time.
-
-I can use the ${savedLooks} look${savedLooks === 1 ? '' : 's'} you’ve saved and your ${upcoming} upcoming planner task${upcoming === 1 ? '' : 's'} to help you get organized. This is my in-app preview for now; the live AI connection still needs to be wired up.</div>
+    <section class="card sasha-dashboard">
+      <div class="sasha-welcome"><strong>Hey, gorgeous. 🤎</strong><p>I can help you plan a style, build a routine, check your supplies, and make the most of the time you have. I use your saved Crown Planner information—not guesswork.</p></div>
+      <div class="sasha-stats">
+        <div><strong>${savedLooks}</strong><span>saved looks</span></div>
+        <div><strong>${upcoming}</strong><span>upcoming tasks</span></div>
+        <div><strong>${missingCount}</strong><span>items to check</span></div>
       </div>
+      <h3 class="sasha-section-heading">What are we working on?</h3>
+      <div class="sasha-tools">
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me plan a wash day using my saved Wash Day Reset steps"> <span>🫧</span><b>Plan wash day</b><small>Steps and time blocks</small></button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Recommend a style based on my saved looks and realistic time commitment"><span>👑</span><b>Find my next style</b><small>Choose from my library</small></button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Build me a practical weekly hair routine from my saved styles and tasks"><span>🗓️</span><b>Build a routine</b><small>A realistic weekly rhythm</small></button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Show me the products and tools I still need based on my saved styles"><span>🛍️</span><b>Check my supplies</b><small>Avoid duplicate purchases</small></button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Create a four-week hair-care plan using my saved styles and tasks"><span>📆</span><b>4-week plan</b><small>Care, styling, refreshes</small></button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Give me low-manipulation style ideas from my saved looks"><span>✨</span><b>Style ideas</b><small>Protective and low effort</small></button>
+      </div>
+      <h3 class="sasha-section-heading">Popular questions</h3>
       <div class="sasha-prompts">
-        <button type="button" data-act="sasha-prompt" data-prompt="Help me plan my next wash day">🫧 Plan wash day</button>
-        <button type="button" data-act="sasha-prompt" data-prompt="Help me choose a style from my saved looks">👑 Pick a style</button>
-        <button type="button" data-act="sasha-prompt" data-prompt="Help me make a realistic hair schedule for this week">🗓️ My week</button>
-        <button type="button" data-act="sasha-prompt" data-prompt="Help me figure out what products and tools I still need">🛍️ What am I missing?</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="How long should I wear my current style?">How long should I wear my style?</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="What should I do between wash days?">What should I do between wash days?</button>
+        <button type="button" data-act="sasha-prompt" data-prompt="Help me set a hair goal and stick to it">Help me set a hair goal</button>
+      </div>
+      <div class="sasha-chat" id="sashaChat" aria-live="polite">
+        <div class="sasha-msg bot">I’m ready when you are, babe. Pick a tool above or ask me a question. I’m currently using built-in guidance and your saved planner data; live AI and Google Calendar conflict checks are not connected yet.</div>
       </div>
       <form class="sasha-compose" data-form="sasha-chat">
-        <textarea name="message" rows="1" placeholder="Talk to me, babe…" aria-label="Message Sasha" required></textarea>
+        <textarea name="message" rows="1" placeholder="Ask Sasha anything…" aria-label="Message Sasha" required></textarea>
         <button class="btn gold" aria-label="Send message">Send ✦</button>
       </form>
-      <p class="sasha-note">Preview mode: Sasha’s look and chat space are here. Connecting a real AI requires a secure service endpoint; no API key belongs in this public HTML file.</p>
+      <p class="sasha-note">Sasha preview · Uses your saved looks, supply checklist, and Crown Planner tasks. No information is sent to an AI service.</p>
     </section>`;
 }
-
 function sashaReply(message) {
-  const q = message.toLowerCase();
-  if (/wash|wash day|detangl|deep condition/.test(q)) {
-    return `Let’s make wash day realistic, babe. 🫧 Your saved wash-day steps are the starting point. I’d block time for detangling, cleansing, conditioning, styling, and cleanup—and keep drying time separate if you’re air-drying. Tell me your target day and how many hours you can give it, and we can shape a plan.
-
-I’m in preview mode right now, so I’m not adding calendar events for you yet.`;
+  const q = String(message || '').toLowerCase();
+  const styles = S.styles || [];
+  const tasks = S.tasks.map(t => ({t,d:nextOcc(t)})).filter(x => x.d).sort((a,b)=>a.d.localeCompare(b.d));
+  const missing = styles.flatMap(st => st.items.filter(i=>!i.have).map(i=>({name:i.name,style:st.name})));
+  const wash = styles.find(s => /wash day/i.test(s.name));
+  const dateLabel = d => fmtDate(d);
+  if (/goal/.test(q)) {
+    return `Let’s make your hair goal doable, not overwhelming. 🤎 Pick one focus for the next four weeks: (1) retain length by reducing breakage, (2) keep your scalp comfortable, (3) get consistent with wash day, or (4) practice a new style. Start with one weekly action and track it in Crown Planner. What matters most to you?`;
   }
-  if (/choose|pick a style|which style|style from/.test(q)) {
-    const looks = S.styles.slice(0, 4).map(x => `${x.emoji || '✨'} ${x.name}`).join('\n');
-    return looks ? `Okay, let’s work with the looks you’ve actually saved. 💅
-${looks}
-
-The best pick depends on your available time, how long you want it to last, and whether your hair is already prepped. Tell me those three things and I’ll help narrow it down.` : `First, let’s give you some options, babe. Add a look in Styles, then come back and we can plan around your real routine. 💋`;
+  if (/four.week|4.week|month plan/.test(q)) {
+    const picks = styles.filter(s=>!/wash day/i.test(s.name)).slice(0,3);
+    const washLine = wash ? `Wash-day foundation: ${wash.name} — ${wash.steps.slice(0,3).map(x=>x.text).join('; ')}.` : 'Add a Wash Day style in Styles so your plan can use your own steps.';
+    return `Your flexible four-week starter plan 📆\n\nWEEK 1 · Reset: ${washLine}\n\nWEEK 2 · Style: choose ${picks[0]?.name || 'a low-manipulation style'} and block enough time for installation.\n\nWEEK 3 · Maintain: check scalp comfort, moisturize as needed, and refresh only where needed.\n\nWEEK 4 · Review: plan a gentle take-down or refresh based on your style’s condition; schedule wash day afterward if appropriate.\n\nYour saved looks to consider: ${picks.map(s=>s.name).join(', ') || 'add a few styles to your library'}. This is a suggested outline, not automatically added to your calendar.`;
   }
-  if (/week|schedule|calendar|busy|time/.test(q)) {
-    const tasks = S.tasks.map(t => ({t,d:nextOcc(t)})).filter(x => x.d && x.d <= addDays(today(), 14)).sort((a,b)=>a.d.localeCompare(b.d)).slice(0,6);
-    const list = tasks.length ? tasks.map(({t,d})=>`• ${fmtDate(d)} — ${t.title}${t.time ? ' at '+t.time : ''}`).join('\n') : '• No upcoming hair tasks in your planner yet.';
-    return `Let’s protect your time instead of pretending you have a free afternoon. 🗓️ Here’s what your Crown Planner currently shows coming up:
-${list}
-
-These are your saved planner tasks, not a live read of Google Calendar. For a proper conflict check, the Google Calendar read connection still needs to be added.`;
+  if (/wash|detangl|deep condition|between wash/.test(q)) {
+    const steps = wash?.steps?.length ? wash.steps.map((x,i)=>`${i+1}. ${x.text}`).join('\n') : '1. Detangle gently in sections\n2. Cleanse the scalp\n3. Condition and detangle\n4. Apply leave-in and style\n5. Allow enough drying time.';
+    return `Let’s make wash day realistic, babe. 🫧 Your saved wash-day steps are:\n${steps}\n\nBlock time for the steps that need your attention, and keep drying time separate if you’re air-drying. Check your Wash Day Reset entry in Styles to update products and tools. I can suggest a schedule here, but I haven’t added calendar events.`;
   }
-  if (/missing|product|tool|shopping|buy|need/.test(q)) {
-    const missing = S.styles.flatMap(st => st.items.filter(i=>!i.have).map(i=>`${i.name} (${st.name})`));
-    return missing.length ? `Here’s what you’ve marked as still needed across your saved looks:
-${[...new Set(missing)].slice(0,12).map(x=>'• '+x).join('\n')}
-
-I’d check your stash before buying duplicates. Very cute to save money for the good stuff. 💸` : `Your saved looks don’t show any missing items right now. Either you’re stocked, or we need to add the products and tools for your next look. 💋`;
+  if (/choose|pick a style|which style|style from|style idea|low.manipulation|recommend a style|next style/.test(q)) {
+    const looks = styles.filter(s=>!/wash day/i.test(s.name)).slice(0,6);
+    return looks.length ? `Let’s start with the looks you’ve actually saved. 👑\n\n${looks.map(s=>`• ${s.emoji || '✨'} ${s.name}${s.notes ? ' — '+s.notes : ''}`).join('\n')}\n\nQuick rule: choose based on the time you have, how much maintenance you want, and whether your hair is already prepped. For a low-manipulation option, avoid installing too tightly and keep your scalp comfortable.` : 'First, add a few looks in Styles. Then I can help you compare the options you saved.' ;
   }
-  return `I hear you, babe. 💋 I’m in preview mode, so I can demonstrate how I’ll use your saved looks and planner—but I’m not connected to a live AI model yet. Try one of the prompts above, or tell me whether we’re planning wash day, choosing a style, or getting your week together.`;
+  if (/week|schedule|calendar|busy|time|routine/.test(q)) {
+    const list = tasks.slice(0,8);
+    const lines = list.length ? list.map(({t,d})=>`• ${dateLabel(d)} — ${t.title}${t.time ? ' at '+t.time : ''}`).join('\n') : '• No upcoming hair tasks saved yet.';
+    return `Let’s protect your time instead of pretending you have a free afternoon. 🗓️ Here’s what Crown Planner shows next:\n${lines}\n\nTry spacing demanding tasks apart: prep or detangle first, installation on the day(s) you can focus, and maintenance in short blocks. These are planner tasks only—not a live read of Google Calendar.`;
+  }
+  if (/missing|product|tool|shopping|buy|supply|supplies/.test(q)) {
+    return missing.length ? `Here’s what you’ve marked as still needed across your saved looks:\n${[...new Set(missing.map(x=>x.name+' ('+x.style+')'))].slice(0,18).map(x=>'• '+x).join('\n')}\n\nCheck your stash before buying duplicates. Mark items as owned in the relevant style to keep this list current.` : 'Your saved looks don’t show any missing items right now. Either you’re stocked, or we need to add products and tools to the style you’re planning. 💋';
+  }
+  if (/how long|wear|take down|duration|refresh/.test(q)) {
+    const looks=styles.filter(s=>!/wash day/i.test(s.name)).slice(0,6);
+    return `Wear time depends on the style, installation tension, scalp comfort, and how it holds up. Don’t keep a style in just to reach a target date—take it down sooner if you notice pain, persistent itching, breakage, or scalp irritation.\n\nYour saved style library includes: ${looks.map(s=>s.name).join(', ') || 'no styles yet'}. Add the planned wear duration in Plan this style to schedule a reminder.`;
+  }
+  return `I can help with your saved Crown Planner information right now. Try asking me to plan wash day, recommend a saved style, build a weekly routine, make a four-week outline, check missing supplies, or discuss wear time.\n\nI’m currently a local preview—not a live AI assistant—so I won’t pretend to know hair details you haven’t provided or that I’ve synced your calendar.`;
 }
-
 function addSashaMessage(text, who) {
   const box = $('#sashaChat'); if (!box) return;
   const node = document.createElement('div'); node.className = `sasha-msg ${who}`; node.textContent = text;
