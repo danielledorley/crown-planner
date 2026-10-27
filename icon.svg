@@ -1,20 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#e8f7f3"/><stop offset=".5" stop-color="#9fdccd"/><stop offset="1" stop-color="#e9e0f8"/>
-    </linearGradient>
-    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#9f7a1a"/><stop offset=".3" stop-color="#f7e7a6"/><stop offset=".55" stop-color="#d4af37"/><stop offset=".8" stop-color="#fff4c8"/><stop offset="1" stop-color="#b08a22"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
-  <ellipse cx="200" cy="120" rx="190" ry="90" fill="#fff" opacity=".45"/>
-  <path d="M120 340 L100 180 L180 250 L256 140 L332 250 L412 180 L392 340 Z" fill="url(#gold)" stroke="#9f7a1a" stroke-width="8" stroke-linejoin="round"/>
-  <rect x="116" y="345" width="280" height="42" rx="21" fill="url(#gold)" stroke="#9f7a1a" stroke-width="8"/>
-  <circle cx="100" cy="172" r="20" fill="#fff4c8" stroke="#9f7a1a" stroke-width="6"/>
-  <circle cx="256" cy="130" r="22" fill="#fff4c8" stroke="#9f7a1a" stroke-width="6"/>
-  <circle cx="412" cy="172" r="20" fill="#fff4c8" stroke="#9f7a1a" stroke-width="6"/>
-  <circle cx="256" cy="290" r="22" fill="#7fcbbb" stroke="#fff" stroke-width="6"/>
-  <path d="M430 60 l9 24 24 9 -24 9 -9 24 -9 -24 -24 -9 24 -9z" fill="#fff"/>
-  <path d="M76 400 l6 15 15 6 -15 6 -6 15 -6 -15 -15 -6 15 -6z" fill="#fff"/>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9f1"/><stop offset="1" stop-color="#efd6c4"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#fff0b4"/><stop offset=".28" stop-color="#d6a64b"/><stop offset=".55" stop-color="#f9dfa0"/><stop offset=".8" stop-color="#b87928"/><stop offset="1" stop-color="#f1c86d"/></linearGradient>
+ <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff4ce"/><stop offset="1" stop-color="#a76522"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<circle cx="256" cy="246" r="184" fill="#fff" opacity=".23"/>
+<path d="M105 190 Q94 166 112 153 Q132 143 145 171 L194 225 L239 115 Q256 78 273 115 L318 225 L367 171 Q380 143 400 153 Q418 166 407 190 L383 338 Q256 375 129 338 Z" fill="url(#gold)" stroke="#87501e" stroke-width="8" stroke-linejoin="round"/>
+<path d="M133 314 Q256 350 379 314 L370 356 Q256 389 142 356Z" fill="url(#shade)" stroke="#87501e" stroke-width="7"/>
+<path d="M145 190 L190 240 M256 132 L256 226 M367 190 L322 240" stroke="#fff4c7" stroke-width="8" stroke-linecap="round" opacity=".8"/>
+<circle cx="126" cy="164" r="17" fill="#f8dfa0" stroke="#87501e" stroke-width="6"/>
+<circle cx="256" cy="112" r="19" fill="#f8dfa0" stroke="#87501e" stroke-width="6"/>
+<circle cx="386" cy="164" r="17" fill="#f8dfa0" stroke="#87501e" stroke-width="6"/>
+<path d="M256 249 l22 22 -22 42 -22 -42z" fill="#6a3528" stroke="#f7d98d" stroke-width="7"/>
+<circle cx="174" cy="278" r="10" fill="#6a3528" stroke="#f7d98d" stroke-width="5"/>
+<circle cx="338" cy="278" r="10" fill="#6a3528" stroke="#f7d98d" stroke-width="5"/>
+<path d="M425 83 l7 18 18 7 -18 7 -7 18 -7 -18 -18 -7 18 -7z" fill="#c18a39"/>
+<path d="M80 380 l5 13 13 5 -13 5 -5 13 -5 -13 -13 -5 13 -5z" fill="#c18a39"/>
 </svg>
