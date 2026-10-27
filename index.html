@@ -424,6 +424,13 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
 .style-planner-form .switch{margin:12px 0;font-size:13px}
 .style-planner-form .sheet-actions{position:sticky;bottom:0;background:#fbf4ef;padding:12px 0 2px;z-index:2}
 
+
+.afro-index-link{display:flex;align-items:center;gap:12px;padding:14px 15px;margin:8px 0 16px;border-radius:17px;background:linear-gradient(120deg,#f7e8df,#f5eadb);border:1px solid #fff;color:#51271f;text-decoration:none;box-shadow:0 4px 15px rgba(74,38,30,.05)}
+.afro-index-link>span:first-child{width:38px;height:38px;border-radius:12px;background:#fffaf7;display:grid;place-items:center;font-size:21px;color:#9c6b42;flex:none}
+.afro-index-link strong{display:block;font-size:14px;color:#51271f}
+.afro-index-link small{display:block;font-size:11px;line-height:1.4;color:#876d64;margin-top:3px}
+.detail-reference-link{display:inline-flex;color:#8a573d;font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid #d7b39a;padding-bottom:3px;margin:0 0 12px}
+
 </style>
 </head>
 <body>
@@ -804,6 +811,7 @@ function viewStyles() {
     <div class="style-search"><span class="search-mark">⌕</span><input data-style-search type="search" placeholder="Search hairstyles…" value="${esc(ui.styleQuery || '')}" aria-label="Search hairstyles"><span style="color:#876d64">☷</span></div>
     <div class="style-filter-row">${filters.map(f => `<button type="button" data-act="style-filter" data-filter="${f}" class="${ui.styleFilter === f ? 'selected' : ''}">${f}</button>`).join('')}</div>
     <div class="library-title-row"><span>${visible.length} ${visible.length === 1 ? 'style' : 'styles'}</span><button class="btn gold sm" data-act="new-style">＋ Add style</button></div>
+    <a class="afro-index-link" href="https://afroindex.org/gallery" target="_blank" rel="noopener"><span>↗</span><span><strong>Explore the Afro Index</strong><small>Browse a dedicated Black hairstyle reference library for more styles and visual ideas.</small></span><span>↗</span></a>
     ${cards ? `<div class="style-grid">${cards}</div>` : '<p class="empty">No styles match. Try another search or category.</p>'}`;
 }
 
@@ -840,6 +848,7 @@ function viewStyle(s) {
         <h2>${esc(s.name)}</h2>
         ${s.notes ? `<p>${esc(s.notes)}</p>` : ''}
         <div class="detail-tags"><span>Natural hair</span><span>Style recipe</span><span>Personalized</span></div>
+        <a class="detail-reference-link" href="https://afroindex.org/gallery" target="_blank" rel="noopener">Explore hairstyle references on Afro Index ↗</a>
         <div class="detail-stats"><div><span>▢</span><small>Wear time</small><strong>Set your own</strong></div><div><span>◷</span><small>Styling time</small><strong>Plan by day</strong></div></div>
         <button class="btn gold block" data-act="plan-style" data-id="${s.id}">▢ &nbsp; Plan this style</button>
       </div>
