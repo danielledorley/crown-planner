@@ -513,7 +513,7 @@ function seed() {
     { id: uid(), name: 'Two-Strand Twists', emoji: '🪢', notes: 'Protective style. LCO plus edge gel. Wear 2–4 weeks.',
       items: [...it([...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Two-strand twist', 'Lay edges with edge gel']), inspo: [], videos: [] },
-    { id: uid(), name: 'Twists with Added Hair', emoji: '🧶', notes: 'Style the day after wash day or a few days later. Wear 2–4 weeks.',
+    { id: uid(), name: 'Kinky / Marley Twists', emoji: '🧶', notes: 'Chunky rope twists installed with kinky-textured extension hair, such as Marley or springy twist hair. Wear time depends on installation and upkeep.',
       items: [...it([['Added hair', 'material'], ...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Crochet hook', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Prep and section the added hair', 'Section', 'LCO: liquid, oil, cream', 'Twist with added hair', 'Finish the ends', 'Lay edges with edge gel']), inspo: [], videos: [] }
   );
@@ -533,12 +533,15 @@ const starterIcons = {
   'Wash Day Reset': ['🫧', '💦'],
   'Twist Out': ['🌀', '✨'],
   'Two-Strand Twists': ['💫', '🪢'],
+  'Kinky / Marley Twists': ['👑', '🧶'],
   'Twists with Added Hair': ['👑', '🧶']
 };
 for (const style of S.styles) {
   const match = starterIcons[style.name];
   if (match && match.includes(style.emoji)) style.emoji = match[1];
 }
+/* Clarify the older generic added-hair twist entry as kinky/Marley twists for returning users. */
+for (const style of S.styles) { if (style.name === 'Twists with Added Hair') { style.name = 'Kinky / Marley Twists'; style.notes = 'Chunky rope twists installed with kinky-textured extension hair, such as Marley or springy twist hair. Wear time depends on installation and upkeep.'; } }
 /* Add more built-in hairstyle recipes for existing users, preserving their saved data. */
 let addedStarterStyles = false;
 const EXTRA_STYLE_STARTERS = [
@@ -776,10 +779,10 @@ function render() {
 function photoByStyle(name, width = 700) {
     const n = name.toLowerCase();
     const photos = [
-      [/box braid|knotless|twists with added hair/i, 'https://images.pexels.com/photos/13767165/pexels-photo-13767165.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/box braid|knotless/i, 'https://images.pexels.com/photos/13767165/pexels-photo-13767165.jpeg?auto=compress&cs=tinysrgb&w=' + width],
       [/cornrow/i, 'https://images.pexels.com/photos/5672900/pexels-photo-5672900.jpeg?auto=compress&cs=tinysrgb&w=' + width],
       [/loc|dread/i, 'https://images.pexels.com/photos/11617524/pexels-photo-11617524.jpeg?auto=compress&cs=tinysrgb&w=' + width],
-      [/twist|flat twist/i, 'https://images.pexels.com/photos/7951589/pexels-photo-7951589.jpeg?auto=compress&cs=tinysrgb&w=' + width],
+      [/kinky|marley|twist|flat twist/i, 'https://images.pexels.com/photos/7951589/pexels-photo-7951589.jpeg?auto=compress&cs=tinysrgb&w=' + width],
       [/wash|twist out|wash.?and.?go|natural curl|afro|puff|bantu|flexi|rod/i, 'https://images.pexels.com/photos/5255559/pexels-photo-5255559.jpeg?auto=compress&cs=tinysrgb&w=' + width],
       [/braid/i, 'https://images.pexels.com/photos/5722771/pexels-photo-5722771.jpeg?auto=compress&cs=tinysrgb&w=' + width]
     ];
