@@ -532,6 +532,20 @@ for (const style of S.styles) {
   const match = starterIcons[style.name];
   if (match && match.includes(style.emoji)) style.emoji = match[1];
 }
+/* Add more built-in hairstyle recipes for existing users, preserving their saved data. */
+const EXTRA_STYLE_STARTERS = [
+['Wash and Go','🦋','Defined curls with leave-in and gel.',['Cleanse and condition','Apply leave-in to soaking-wet hair','Layer curl cream and gel','Air-dry or diffuse']],
+['Mini Twists','🌿','Low-manipulation two-strand twists using your own hair.',['Start on stretched, moisturized hair','Part into small sections','Twist each section from root to end','Seal ends and protect at night']],
+['Flat Twists','🪢','Scalp-hugging twists that can be worn as a style or set.',['Part clean, moisturized hair','Add styling product section by section','Flat-twist close to the scalp','Allow to dry fully']],
+['Box Braids','👑','Individual three-strand braids; keep tension comfortable.',['Section hair into boxes','Prepare extension hair if using','Braid each section evenly','Avoid excess tension']],
+['Knotless Braids','✨','Feed-in braids with gradual addition of extension hair.',['Section hair cleanly','Begin with natural hair','Feed in extension hair gradually','Finish ends gently']],
+['Cornrows','🌊','Close-to-scalp rows with a variety of parting patterns.',['Map out row pattern','Moisturize and section hair','Braid each row without pulling','Protect with a satin scarf']],
+['Faux Locs','🧶','Loc-inspired protective style using a wrapping or crochet method.',['Prep hair','Section and install base braids or twists','Wrap or crochet loc hair','Protect at night']],
+['Goddess Locs','🌸','Loc-inspired style with soft, curly pieces for a boho finish.',['Prep and section hair','Install the loc base gently','Add curly pieces','Refresh scalp and loose curls']],
+['Bantu Knots','🌺','Coiled knots that can also create a defined knot-out.',['Section moisturized hair','Twist each section','Coil into a knot','Dry fully before unraveling']],
+['Flexi Rod Set','💐','Heat-free curls created with flexi rods.',['Apply setting product to damp hair','Wrap sections around rods','Allow hair to dry completely','Remove rods and separate curls']]
+];
+for (const item of EXTRA_STYLE_STARTERS) { const name=item[0]; if (!S.styles.some(s=>s.name.toLowerCase()===name.toLowerCase())) S.styles.push({id:uid(),name,emoji:item[1],notes:item[2],items:[],steps:item[3].map(text=>({id:uid(),text})),inspo:[],videos:[],referenceUrl:'https://afroindex.org/gallery'}); }
 function save() {
   try { localStorage.setItem(KEY, JSON.stringify(S)); }
   catch (e) { toast('Storage is full — export a backup in Settings 💾'); }
