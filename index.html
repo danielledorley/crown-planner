@@ -1135,6 +1135,19 @@ function sashaReply(message) {
   const missing = styles.flatMap(st => st.items.filter(i=>!i.have).map(i=>({name:i.name,style:st.name})));
   const wash = styles.find(s => /wash day/i.test(s.name));
   const dateLabel = d => fmtDate(d);
+  // Handle explicit style comparisons and occasion-based requests before generic keyword replies.
+  if (/vacation|holiday|trip|travel|beach|cruise/.test(q) &&
+      /marley|faux loc|knotless/.test(q)) {
+    return `For vacation, I’d narrow it to these three based on low maintenance, comfort, and how much time you want to spend installing. 🤎
+
+• **Marley twists** — My pick if you want a bold, fluffy look and a fairly straightforward daily routine. They can feel bulky, so ask for a weight and size you’re comfortable with.
+• **Faux locs** — Great if you want a loc look without committing to locs. They can be heavier and take longer to install and remove, depending on the method.
+• **Knotless braids** — A versatile option with easy styling and a smooth, lightweight feel when done in a sensible size. They can take a long time to install, and the ends/scalp still need care.
+
+**My recommendation:** Marley twists if your priority is a low-fuss vacation look; knotless braids if you want the most styling versatility; faux locs if the loc aesthetic is what you’re excited about. None should be installed tightly, and comfort matters more than keeping them in for a set number of weeks.
+
+Two things would help me make the call: **How long is the vacation, and will you be swimming often?**`;
+  }
   if (/goal/.test(q)) {
     return `Let’s make your hair goal doable, not overwhelming. 🤎 Pick one focus for the next four weeks: (1) retain length by reducing breakage, (2) keep your scalp comfortable, (3) get consistent with wash day, or (4) practice a new style. Start with one weekly action and track it in Crown Planner. What matters most to you?`;
   }
