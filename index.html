@@ -399,6 +399,31 @@ input:focus,select:focus,textarea:focus{border-color:#b98242;box-shadow:0 0 0 3p
 .sheet form[data-form="wizard"] .sheet-actions{position:sticky;bottom:0;background:#fffaf7;padding:10px 0 2px}
 @media(max-width:380px){.style-library-head h2{font-size:27px}.style-grid{gap:8px}.sc-name{font-size:13px}.style-detail-photo{height:275px}}
 
+
+/* Planning sheet closely follows the supplied mobile design */
+.style-planner-form .sheet-head h3{font-family:Georgia,'Times New Roman',serif;font-size:28px;color:#51271f}
+.planner-style-summary{display:flex;gap:12px;align-items:center;background:#fffaf7;border:1px solid white;border-radius:16px;padding:9px;margin:8px 0 12px;box-shadow:0 4px 15px rgba(74,38,30,.05)}
+.planner-style-summary img{width:88px;height:88px;object-fit:cover;border-radius:12px;background:#ead9ce;flex:none}
+.planner-style-summary strong{font-size:17px;color:#51271f}
+.planner-style-summary p{font-size:12px;line-height:1.4;color:#876d64;margin:4px 0 0}
+.planner-form-section{background:#fffaf7;border:1px solid white;border-radius:17px;padding:14px;margin:10px 0;box-shadow:0 4px 15px rgba(74,38,30,.04)}
+.planner-form-section h4{font-size:14px;margin:0 0 12px;color:#51271f}
+.planner-form-section h4 span{font-weight:500}
+.planner-form-section .fld{margin:10px 0}
+.planner-form-section .fld>span{font-size:12px;letter-spacing:0;text-transform:none;color:#654036}
+.stepper{display:flex;align-items:center;gap:0;min-width:0}
+.stepper button{width:46px;height:42px;border:1px solid #ead8d0;background:#fbf3ee;font-size:22px;flex:none}
+.stepper button:first-child{border-radius:12px 0 0 12px}
+.stepper button:last-of-type{border-radius:0 12px 12px 0}
+.stepper input{width:68px!important;min-width:40px!important;text-align:center!important;border-radius:0!important;height:42px;min-height:42px!important;padding:8px 2px!important;border-left:0!important;border-right:0!important}
+.stepper em{font-style:normal;margin-left:12px;font-size:13px;white-space:nowrap}
+.planner-note{font-size:12px;line-height:1.45;background:#f7e7d6;border-radius:12px;padding:10px;color:#654036;margin:12px 0 0}
+.wear-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+.wear-row select{height:44px;min-width:0}
+.optional-label{font-size:11px;color:#9b7b70;font-weight:500}
+.style-planner-form .switch{margin:12px 0;font-size:13px}
+.style-planner-form .sheet-actions{position:sticky;bottom:0;background:#fbf4ef;padding:12px 0 2px;z-index:2}
+
 </style>
 </head>
 <body>
@@ -1134,44 +1159,43 @@ function taskForm(t, p = {}) {
 function wizardForm(s) {
   const def = addDays(today(), 7);
   const added = /added|braid|loc|crochet|wig|sew/i.test(s.name);
-  const washOpts = '<option value="">— no wash routine —</option>' + S.styles.map(x => `<option value="${x.id}" ${/wash/i.test(x.name) ? 'selected' : ''}>${esc(x.emoji)} ${esc(x.name)}</option>`).join('');
-  const sel = (n, list, d) => `<select name="${n}">${list.map(([v, l]) => `<option value="${v}" ${v === d ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
+  const photo = s.inspo[0] ? `<img data-photo="${esc(s.inspo[0])}" alt="">` :
+    `<img src="${(/loc|braid|cornrow|knotless|added hair|faux/i.test(s.name) ? 'https://images.unsplash.com/photo-1634225605000-d02176a12d24?auto=format&fit=crop&w=700&q=82' : 'https://images.unsplash.com/photo-1664293282001-0363011a3cc9?auto=format&fit=crop&w=700&q=82')}" alt="" onerror="this.style.display='none'">`;
+  const sel = (n, list, d) => `<select name="${n}">${list.map(([v, l]) => `<option value="${v}" ${String(v) === String(d) ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
   const hrs = [1, 2, 3, 4, 5, 6, 7, 8, 10].map(h => [h, `${h} hr${h > 1 ? 's' : ''}`]);
-  const ck = (n, label, sub, on = true) => `<label class="switch"><input type="checkbox" name="${n}" ${on ? 'checked' : ''}><span class="track"></span><span>${label}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${sub}</span></span></label>`;
-  return `<form data-form="wizard" data-id="${s.id}">
-    <div class="sheet-head"><h3 class="script">Plan it, babe</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
-    <p class="muted" style="margin-top:0">${esc(s.emoji)} ${esc(s.name)}: pick wash day and style day, and I’ll map out the rest.</p>
-    <div class="row2">
-      <label class="fld"><span>Wash day</span><input type="date" name="date" required value="${def}"></label>
-      <label class="fld"><span>Start time</span><input type="time" name="washTime" value="09:00"></label>
-    </div>
-    <div class="row2">
-      <label class="fld"><span>Wash takes</span>${sel('washHours', hrs, 4)}</label>
-      <label class="fld"><span>Wash routine</span><select name="washStyle">${washOpts}</select></label>
-    </div>
-    <div class="row2">
-      <label class="fld"><span>Style day</span>${sel('styleOffset', [[0, 'Same day'], [1, 'Next day'], [2, '2 days later'], [3, '3 days later']], added ? 1 : 0)}</label>
-      <label class="fld"><span>Style start</span><input type="time" name="time" value="${added ? '10:00' : '15:00'}"></label>
-    </div>
-    <div class="row2">
-      <label class="fld"><span>Styling time per day</span>${sel('hours', hrs, added ? 6 : 2)}</label>
-      <label class="fld"><span>How many days to complete it?</span><input name="styleDays" type="number" min="1" max="14" step="1" value="1" required></label>
-    </div>
-    <p class="hint">For styles that take several sessions, Crown Planner will schedule a task for each styling day.</p>
-    <div class="row2">
-      <label class="fld"><span>How long will you wear it?</span><input name="wearLength" type="number" min="1" max="365" step="1" value="3" required></label>
-      <label class="fld"><span>Wear-time units</span>${sel('wearUnit', [['days','Days'],['weeks','Weeks'],['months','Months']], 'weeks')}</label>
-    </div>
-    <p class="hint">Choose any number of days, weeks, or months. Crown Planner will schedule your refresh and take-down around this duration.</p>
-    <div class="eyebrow" style="margin-top:12px">Add these to my planner</div>
-    ${ck('shop', 'Supply run 🛍️', '3 days before wash day, with your missing items')}
-    ${ck('wash', 'Wash day 🫧', 'With your wash routine steps in the notes')}
-    ${ck('install', 'Style day 🌀', 'With this style’s steps in the notes')}
-    ${ck('refresh', 'Mid-way refresh ✨', 'Halfway through: edges, scalp, re-twist as needed')}
-    ${ck('takedown', 'Take down 🪮', 'At the end of the wear time, ready for the next wash day')}
-    <hr style="border:0;border-top:1px dashed var(--line);margin:8px 0">
-    <label class="switch"><input type="checkbox" name="sync" ${S.settings.clientId ? 'checked' : ''}><span class="track"></span> Add to Google Calendar</label>
-    <div class="sheet-actions"><button class="btn gold">Add to my planner ✦</button></div>
+  const ck = (n, label, sub, on = false) => `<label class="switch"><input type="checkbox" name="${n}" ${on ? 'checked' : ''}><span class="track"></span><span>${label}<span class="sub" style="display:block;font-size:12px;color:var(--ink-soft);font-weight:500">${sub}</span></span></label>`;
+  return `<form data-form="wizard" data-id="${s.id}" class="style-planner-form">
+    <div class="sheet-head"><h3 class="script">Plan this style</h3><button type="button" class="x" data-act="close-sheet">✕</button></div>
+    <div class="planner-style-summary">${photo}<div><strong>${esc(s.name)}</strong><p>${esc(s.notes || 'Your next look, planned around your time.')}</p></div></div>
+    <section class="planner-form-section">
+      <h4>♧ &nbsp; Styling duration <span>(to complete the style)</span></h4>
+      <label class="fld"><span>How many days will it take?</span><div class="stepper"><button type="button" data-act="number-step" data-target="styleDays" data-step="-1">−</button><input name="styleDays" type="number" min="1" max="14" step="1" value="1" required><button type="button" data-act="number-step" data-target="styleDays" data-step="1">＋</button><em>days</em></div></label>
+      <label class="fld"><span>How many hours per day?</span><div class="stepper"><button type="button" data-act="number-step" data-target="hours" data-step="-1">−</button><input name="hours" type="number" min="1" max="10" step="1" value="${added ? 6 : 2}" required><button type="button" data-act="number-step" data-target="hours" data-step="1">＋</button><em>hours</em></div></label>
+      <p class="planner-note">▦ &nbsp; This creates separate styling sessions on consecutive days. You can adjust your tasks after adding them.</p>
+    </section>
+    <section class="planner-form-section">
+      <h4>◷ &nbsp; How long will you wear it?</h4>
+      <div class="wear-row"><div class="stepper"><button type="button" data-act="number-step" data-target="wearLength" data-step="-1">−</button><input name="wearLength" type="number" min="1" max="365" step="1" value="4" required><button type="button" data-act="number-step" data-target="wearLength" data-step="1">＋</button></div>${sel('wearUnit', [['days','Days'],['weeks','Weeks'],['months','Months']], 'weeks')}</div>
+    </section>
+    <section class="planner-form-section">
+      <h4>▦ &nbsp; Start date</h4>
+      <label class="fld"><input type="date" name="date" required value="${def}"></label>
+    </section>
+    <section class="planner-form-section">
+      <h4>▦ &nbsp; Add to calendar</h4>
+      <label class="switch"><input type="checkbox" name="install" checked><span class="track"></span><span>Save styling sessions in Crown Planner</span></label>
+      <label class="switch"><input type="checkbox" name="wash"><span class="track"></span><span>Include wash day</span></label>
+      <label class="switch"><input type="checkbox" name="shop"><span class="track"></span><span>Include a supply run</span></label>
+      <label class="switch"><input type="checkbox" name="refresh" checked><span class="track"></span><span>Schedule a mid-way refresh</span></label>
+      <label class="switch"><input type="checkbox" name="takedown" checked><span class="track"></span><span>Schedule take-down</span></label>
+      <label class="switch"><input type="checkbox" name="sync" ${S.settings.clientId ? 'checked' : ''}><span class="track"></span><span>Also add to Google Calendar <small class="optional-label">(optional)</small></span></label>
+    </section>
+    <input type="hidden" name="styleOffset" value="0">
+    <input type="hidden" name="washTime" value="09:00">
+    <input type="hidden" name="time" value="10:00">
+    <input type="hidden" name="washHours" value="4">
+    <input type="hidden" name="washStyle" value="">
+    <div class="sheet-actions"><button class="btn gold block">Add to Plan</button></div>
   </form>`;
 }
 
