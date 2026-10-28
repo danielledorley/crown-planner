@@ -558,7 +558,7 @@ function seed() {
     { id: uid(), name: 'Two-Strand Twists', emoji: '🪢', notes: 'Protective style. LCO plus edge gel. Wear 2–4 weeks.',
       items: [...it([...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Section', 'LCO: liquid, oil, cream', 'Two-strand twist', 'Lay edges with edge gel']), inspo: [], videos: [] },
-    { id: uid(), name: 'Kinky / Marley Twists', emoji: '🧶', notes: 'Chunky rope twists installed with kinky-textured extension hair, such as Marley or springy twist hair. Wear time depends on installation and upkeep.',
+    { id: uid(), name: 'Kinky / Marley / Passion Twists', emoji: '🧶', notes: 'Chunky rope twists installed with kinky-textured extension hair, such as Marley, passion-twist, or springy twist hair. Wear time depends on installation and upkeep.',
       items: [...it([['Added hair', 'material'], ...lco, ['Edge gel', 'product']]), ...it([['Sectioning clips', 'tool'], ['Rat-tail comb', 'tool'], ['Crochet hook', 'tool']], true)],
       steps: st(['Start on stretched hair', 'Prep and section the added hair', 'Section', 'LCO: liquid, oil, cream', 'Twist with added hair', 'Finish the ends', 'Lay edges with edge gel']), inspo: [], videos: [] }
   );
@@ -578,15 +578,15 @@ const starterIcons = {
   'Wash Day Reset': ['🫧', '💦'],
   'Twist Out': ['🌀', '✨'],
   'Two-Strand Twists': ['💫', '🪢'],
-  'Kinky / Marley Twists': ['👑', '🧶'],
+  'Kinky / Marley / Passion Twists': ['👑', '🧶'],
   'Twists with Added Hair': ['👑', '🧶']
 };
 for (const style of S.styles) {
   const match = starterIcons[style.name];
   if (match && match.includes(style.emoji)) style.emoji = match[1];
 }
-/* Clarify the older generic added-hair twist entry as kinky/Marley twists for returning users. */
-for (const style of S.styles) { if (style.name === 'Twists with Added Hair') { style.name = 'Kinky / Marley Twists'; style.notes = 'Chunky rope twists installed with kinky-textured extension hair, such as Marley or springy twist hair. Wear time depends on installation and upkeep.'; } }
+/* Clarify the older generic added-hair twist entry as kinky/Marley/passion twists for returning users. */
+for (const style of S.styles) { if (style.name === 'Twists with Added Hair') { style.name = 'Kinky / Marley / Passion Twists'; style.notes = 'Chunky rope twists installed with kinky-textured extension hair, such as Marley, passion-twist, or springy twist hair. Wear time depends on installation and upkeep.'; } }
 /* Add more built-in hairstyle recipes for existing users, preserving their saved data. */
 let addedStarterStyles = false;
 const EXTRA_STYLE_STARTERS = [
